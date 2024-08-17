@@ -1,0 +1,24 @@
+name: kernel build
+stop_on_error: true
+apt:
+    assume_yes: true
+    install:
+        - bison
+        - build-essential
+        - flex
+        - libncurses5-dev
+        - ncurses-dev
+        - libelf-dev
+        - libssl-dev
+        - tar
+        - util-linux
+        - xz-utils
+        - bc
+        - dwarves
+        - xmlto
+        - kmod
+        - bc
+        - git
+        - cpio
+        - perl
+        - file
