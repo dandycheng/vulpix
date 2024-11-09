@@ -4,7 +4,6 @@
 
 SRC_PATH := src
 DEPS_PATH := $(SRC_PATH)/dependencies
-INCLUDE_PATH := include
 TEST_PATH := tests
 UNIT_TEST_PATH := $(TEST_PATH)/unit-tests
 OBJ_PATH := $(SRC_PATH)/build/obj
@@ -37,7 +36,6 @@ PKG_MANAGER = $(shell which apt || which zypper || which yum)
 setup-env:
 	@echo "\nSetting up build environment..."
 	$(call MKDIR,$(SRC_PATH))
-	$(call MKDIR,$(INCLUDE_PATH))
 	$(call MKDIR,$(DEPS_PATH))
 	$(call MKDIR,$(OBJ_PATH))
 	$(call MKDIR,$(BUILD_OUT_PATH))

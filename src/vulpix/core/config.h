@@ -1,6 +1,9 @@
-#ifndef CONFIG_DEFINES_H
-#define CONFIG_DEFINES_H
+#ifndef CONFIG_H
+#define CONFIG_H
 
+#include "yaml-cpp/yaml.h"
+#include "packageManager.h"
+#include <vector>
 #include <string>
 #include <cstdint>
 #include <array>
@@ -52,12 +55,32 @@ typedef struct propertyStruct
 
 void* getDefaultValueStopOnError(void);
 
+// TODO: Consider using LinkedList for compile time evaluation?
 const property_t g_configTypes[] =
 {
     // key                required    allowsChildren    getDefaultValue                 dataType    requiredSubPropertyMask
     { "name",             true,       false,            nullptr,                        STRING,     NO_SUB_PROPERTY        },
     { "apt",              false,      true,             nullptr,                        STRING,     (INSTALL | ASSUME_YES) },
     { "stop_on_error",    false,      false,            &getDefaultValueStopOnError,    BOOL,       NO_SUB_PROPERTY        }
+};
+
+class Config
+{
+public:
+    Config(string configFile);
+    ~Config(void);
+
+    const string getConfigName(void);
+    bool setupConfig(void);
+    bool isConfigValid(void);
+    bool stopOnError(void);
+    vector<string> getInstalls(string key);
+
+protected:
+    bool hasRequiredSubProperty(string key, vector<subProperty_t>* subProperties);
+    bool hasRequiredSubProperty(const char* key, vector<subProperty_t>* subProperties);
+
+    YAML::Node m_config;
 };
 
 #endif

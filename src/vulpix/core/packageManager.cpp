@@ -1,8 +1,8 @@
 #include "packageManager.h"
 #include <iostream>
-#include "sanitizer.h"
+#include "utils/sanitizer.h"
 #include "logs.h"
-#include "shellDefines.h"
+#include "shell.h"
 
 // TODO: Create a base class for all package managers
 /**

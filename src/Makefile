@@ -1,9 +1,9 @@
 BINARY_NAME := vulpix
 VPX_BUILD_SRC = $(shell find $(SRC_PATH)/vulpix/* -name '*.cpp')
+VPX_HEADERS = $(sort $(dir $(shell find $(SRC_PATH)/vulpix/* -name '*.h' -or -name '*.hpp')))
 
 VULPIX_BUILD_INCLUDES += \
-	$(INCLUDE_PATH)/vulpix \
-	$(shell ls -d $(INCLUDE_PATH)/vulpix/*/) \
+	$(VPX_HEADERS) \
 	$(DEPS_PATH)/yaml-cpp/source/include \
 	$(DEPS_PATH)/yaml-cpp/source/src
 
