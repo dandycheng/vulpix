@@ -7,22 +7,21 @@ VULPIX_BUILD_INCLUDES += \
 	$(DEPS_PATH)/yaml-cpp/source/include \
 	$(DEPS_PATH)/yaml-cpp/source/src
 
-ifeq ($(DEBUG),1)
-	CXX_FLAGS += -D DEBUG
-	CXX_FLAGS += -g
-endif
-
-build-vulpix-objs: $(subst $(SRC_PATH),$(OBJ_PATH),$(call GET_OBJ_NAMES,$(SRC_PATH)/vulpix))
+build-vulpix-objs: get-build-config $(subst $(SRC_PATH),$(OBJ_PATH),$(call GET_OBJ_NAMES,$(SRC_PATH)/vulpix))
 build: $(BUILD_OUT_PATH)/$(BINARY_NAME)
 get-build-config:
 ifeq ($(DEBUG),1)
 	echo "\nDEBUGGING IS ON.\n"
+
+CXX_FLAGS := \
+	-D DEBUG \
+	-g
 else
 	echo "\nDEBUGGING IS OFF.\n"
 endif
 
 .SILENT:
-$(BUILD_OUT_PATH)/$(BINARY_NAME): get-build-config build-deps build-vulpix-objs
+$(BUILD_OUT_PATH)/$(BINARY_NAME): build-vulpix-objs
 	mkdir -p $(BUILD_OUT_PATH);
 	echo "\nLinking binary $@...";
 	$(CXX) $(CXX_FLAGS) -o $@ $(call GET_OBJ_FILES,$(OBJ_PATH));
