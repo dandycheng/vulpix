@@ -41,8 +41,14 @@ setup-env:
 	$(call MKDIR,$(BUILD_OUT_PATH))
 
 install-build-deps:
-	sudo $(PKG_MANAGER) update
-	sudo $(PKG_MANAGER) install -y $(BUILD_DEPENDENCIES)
+	sudo $(PKG_MANAGER) update; \
+	for dep in $(BUILD_DEPENDENCIES); do \
+		if [ -n "`dpkg -l | grep $$dep | awk '{print $2}'`" ]; then \
+			echo "$$dep is already installed."; \
+		else \
+			sudo $(PKG_MANAGER) install -y $(BUILD_DEPENDENCIES); \
+		fi \
+	done
 
 install-test-deps:
 	sudo $(PKG_MANAGER) update
