@@ -1,5 +1,6 @@
 #include "config.h"
 #include "logs.h"
+#include "file.h"
 #include "packageManager.h"
 #include <iostream>
 #include <cstring>
@@ -116,6 +117,7 @@ bool Config::stopOnError(void)
  */
 vector<string> Config::getInstalls(string key)
 {
+    // TODO: decltype
     // TODO: Don't hardcode string "install".
     // TODO: Instead of throwing error when the key isn't in the config, print message.
     // FIXME: Update UT lists as well, not just string
@@ -146,4 +148,24 @@ vector<string> Config::getInstalls(string key)
 void* getDefaultValueStopOnError(void)
 {
     return (void*) true;
+}
+
+distro_t getDistro(void)
+{
+    string distro { findTextInFile(OS_RELEASE_PATH, std::regex("^ID", std::regex_constants::ECMAScript)) };
+
+    if (distro.length() > 0)
+    {
+        distro = distro.substr(3, distro.length());    // Trim off the "ID="
+
+        std::transform(distro.begin(), distro.end(), distro.begin(), ::tolower);
+
+        if (distro == "ubuntu") return UBUNTU;
+        if (distro == "opensuse") return OPEN_SUSE;
+        if (distro == "redhat") return REDHAT;
+    }
+
+    DEBUG_LOG(LOG_ERROR, "Unable to open file: %s", OS_RELEASE_PATH);
+
+    return UNKNOWN_DISTRO;
 }

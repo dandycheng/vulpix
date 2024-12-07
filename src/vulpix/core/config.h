@@ -10,6 +10,16 @@
 
 using namespace std;
 
+#define OS_RELEASE_PATH "/etc/os-release"
+
+typedef enum Distro
+{
+    UBUNTU,
+    REDHAT,
+    OPEN_SUSE,
+    UNKNOWN_DISTRO
+} distro_t;
+
 typedef enum DataType
 {
     STRING,
@@ -43,15 +53,17 @@ const std::array<std::pair<int, string>, NUM_SUB_PROPERTIES> g_subProperties
 }};
 
 typedef uint16_t requiredPropMask_t;
+typedef void* (*funcPtr_t)(void);
 typedef struct propertyStruct
 {
     const char* key;
     bool required;
     bool allowsChildren;
-    void* (*getDefaultValue)(void);
+    funcPtr_t getDefaultValue;
     dataType_t dataType;
     requiredPropMask_t requiredSubPropertyMask;
 } property_t;
+
 
 void* getDefaultValueStopOnError(void);
 
@@ -82,5 +94,7 @@ protected:
 
     YAML::Node m_config;
 };
+
+distro_t getDistro(void);
 
 #endif
