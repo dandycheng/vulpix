@@ -8,11 +8,11 @@ using ::testing::StrEq;
 TEST(UnitTest_Aptitude, testInstallPackage)
 {
     SystemMock mock;
-    vector<string> packages { "g++", "cmake", "bison" };
     Aptitude apt;
 
     struct testItem
     {
+        packageManager_t pkgMgrType;
         vector<string> packages;
         bool skipMalformedPkgs;
         bool assumeYes;
@@ -21,26 +21,29 @@ TEST(UnitTest_Aptitude, testInstallPackage)
 
     testItem testCases[] =
     {
-        // packages                       skipMalformedPkgs    assumeYes    expectCmd
-        { { "g++", "cmake", "bison" },    true,                true,        "sudo apt install -y g++ cmake bison" },
-        { { "7zip", "android-sdk"   },    true,                false,       "sudo apt install 7zip android-sdk"   },
-        { { "#123", "build-essential" },  false,               true,        ""                                    },
+        // pkgMgrType     packages                       skipMalformedPkgs    assumeYes    expectCmd
+        {  APTITUDE,     { "g++", "cmake", "bison" },    true,                true,        "sudo apt install -y g++ cmake bison" },
+        {  APTITUDE,     { "7zip", "android-sdk"   },    true,                false,       "sudo apt install 7zip android-sdk"   },
+        {  APTITUDE,     { "#123", "build-essential" },  false,               true,        ""                                    },
     };
 
     uint8_t i = 0;
 
     for (testItem item : testCases)
     {
-        if (item.expectCmd.length() > 0)
+        bool validCmd = (item.expectCmd.length() > 0);
+
+        if (validCmd)
         {
             EXPECT_CALL(mock, system(StrEq(item.expectCmd)))
                 .Times(1)
                 .WillOnce(Return(0));
         }
 
-        bool expectPass = (item.expectCmd.length() > 0);
-
-        ASSERT_EQ(apt.installPackage(&mock, &item.packages, item.assumeYes, item.skipMalformedPkgs), expectPass) << "Index: " << (i++);
+        if (item.pkgMgrType == APTITUDE)
+        {
+            ASSERT_EQ(apt.installPackage(&mock, &item.packages, item.assumeYes, item.skipMalformedPkgs), validCmd) << "Index: " << (i++);
+        }
     }
 
 }
