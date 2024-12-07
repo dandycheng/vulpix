@@ -12,12 +12,12 @@ string joinCmd(vector<string>* cmd, string separator)
     return result;
 }
 
-int runCmd(SystemCallInterface* sys, const char* cmd)
+int runCmd(SystemInterface* sys, const char* cmd)
 {
     return sys->system(cmd);
 }
 
-int SystemCall::system(const char* cmd)
+int System::system(const char* cmd)
 {
     return ::system(cmd);
 }

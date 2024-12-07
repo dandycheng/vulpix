@@ -22,14 +22,14 @@ public:
     ~PackageManagerBase(void);
 
     // virtual bool updatePackageInfo(void);
-    virtual bool installPackage(SystemCallInterface* sys, vector<string>* packages, bool assumeYes = true, bool skipMalformedPackages = true);
+    virtual bool installPackage(SystemInterface* sys, vector<string>* packages, bool assumeYes = true, bool skipMalformedPackages = true);
     // virtual bool removePackage(vector<string> packages);
-    virtual void sanitizePackageNames(vector<string>* packages, bool printInvalidPackagenames = true);
+    virtual bool sanitizePackageNames(vector<string>* packages, bool printInvalidPackagenames = true);
 
 private:
     string m_cmd;
     packageManager_t m_pkgMgr;
-    SystemCall* m_sys;
+    System* m_sys;
 };
 
 #endif

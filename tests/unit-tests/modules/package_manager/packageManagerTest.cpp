@@ -2,21 +2,47 @@
 #include "packageManagerTestUtils.h"
 #include "Aptitude.h"
 
-using ::testing::_;
 using ::testing::Return;
-using ::testing::AtLeast;
 using ::testing::StrEq;
 
 TEST(UnitTest_Aptitude, testInstallPackage)
 {
-    SystemCallMock mock;
+    SystemMock mock;
     vector<string> packages { "g++", "cmake", "bison" };
-    Aptitude* apt { new Aptitude() };
+    Aptitude apt;
 
-    EXPECT_CALL(mock, system(StrEq("sudo apt install -y g++ cmake bison"))).Times(1);
+    struct testItem
+    {
+        vector<string> packages;
+        bool skipMalformedPkgs;
+        bool assumeYes;
+        string expectCmd;
+    };
 
-    apt->installPackage(&mock, &packages, true, true);
-    delete apt;
+    testItem testCases[] =
+    {
+        // packages                       skipMalformedPkgs    assumeYes    expectCmd
+        { { "g++", "cmake", "bison" },    true,                true,        "sudo apt install -y g++ cmake bison" },
+        { { "7zip", "android-sdk"   },    true,                false,       "sudo apt install 7zip android-sdk"   },
+        { { "#123", "build-essential" },  false,               true,        ""                                    },
+    };
+
+    uint8_t i = 0;
+
+    for (testItem item : testCases)
+    {
+        if (item.expectCmd.length() > 0)
+        {
+            EXPECT_CALL(mock, system(StrEq(item.expectCmd)))
+                .Times(1)
+                .WillOnce(Return(0));
+        }
+
+        bool expectPass = (item.expectCmd.length() > 0);
+
+        ASSERT_EQ(apt.installPackage(&mock, &item.packages, item.assumeYes, item.skipMalformedPkgs), expectPass) << "Index: " << (i++);
+    }
+
 }
 
 int main()

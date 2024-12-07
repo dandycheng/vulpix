@@ -16,20 +16,20 @@ enum ReturnCode
 
 typedef int returnCode_t;
 
-class SystemCallInterface
+class SystemInterface
 {
 public:
-    virtual ~SystemCallInterface() = default;
+    virtual ~SystemInterface() = default;
     virtual int system(const char* cmd) = 0;
 };
 
-class SystemCall : public SystemCallInterface
+class System : public SystemInterface
 {
 public:
     int system(const char* cmd);
 };
 
 string joinCmd(vector<string>* cmd, string separator = " ");
-int runCmd(SystemCallInterface* sys, const char* cmd);
+int runCmd(SystemInterface* sys, const char* cmd);
 
 #endif
