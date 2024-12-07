@@ -11,9 +11,7 @@ BUILD_OUT_PATH := $(SRC_PATH)/build/out
 
 CXX := g++
 MAKEFLAGS += --no-print-directory
-CXX_FLAGS := \
-	-std=c++14
-CXX_LIBS =
+CXX_FLAGS := -std=c++14	
 
 include ./utils.mk
 include $(DEPS_PATH)/Makefile
@@ -59,6 +57,7 @@ remove-build-deps:
 
 .PHONY:
 clean: clean-deps
+	echo Cleaning vulpix...
 	rm -rf $(VPX_CLEAN_SOURCES)
 
 # TODO: Update this to remove dependency folders in src

@@ -7,13 +7,13 @@ DEPENDENCIES := yaml-cpp
 
 INCLUDE_PATHS := \
 	$(VPX_HEADERS) \
-	../../../src/dependencies/yaml-cpp/source/include \
+	$(ROOT_DIR_RELATIVE)/src/dependencies/yaml-cpp/source/include \
 	../../test-framework/mocks \
 	../../test-framework/mocks/stdlib
 	
 OBJ_FILE_PATHS := \
-	../../../src/build/obj/yaml-cpp/source \
-	../../../src/build/obj/vulpix \
+	$(ROOT_DIR_RELATIVE)/src/build/obj/yaml-cpp/source \
+	$(ROOT_DIR_RELATIVE)/src/build/obj/vulpix \
 	../../test-framework/out/obj/mocks
 
-OMIT_OBJ_FILES += ../../../src/build/obj/vulpix/main.o
+OMIT_OBJ_FILES += $(ROOT_DIR_RELATIVE)/src/build/obj/vulpix/main.o

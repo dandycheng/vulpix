@@ -21,7 +21,7 @@ else
 endif
 
 .SILENT:
-$(BUILD_OUT_PATH)/$(BINARY_NAME): build-vulpix-objs
+$(BUILD_OUT_PATH)/$(BINARY_NAME): build-deps build-vulpix-objs
 	mkdir -p $(BUILD_OUT_PATH);
 	echo "\nLinking binary $@...";
 	$(CXX) $(CXX_FLAGS) -o $@ $(call GET_OBJ_FILES,$(OBJ_PATH));
