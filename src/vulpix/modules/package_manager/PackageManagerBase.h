@@ -29,7 +29,6 @@ public:
 private:
     string m_cmd;
     packageManager_t m_pkgMgr;
-    System* m_sys;
 };
 
 #endif

@@ -4,8 +4,7 @@
 #include <iostream>
 
 PackageManagerBase::PackageManagerBase(packageManager_t packageManagerType) :
-    m_pkgMgr(packageManagerType),
-    m_sys(new System())
+    m_pkgMgr(packageManagerType)
 {
     switch (packageManagerType)
     {
@@ -29,7 +28,6 @@ PackageManagerBase::PackageManagerBase(packageManager_t packageManagerType) :
 
 PackageManagerBase::~PackageManagerBase(void)
 {
-    delete m_sys;
 }
 
 /**

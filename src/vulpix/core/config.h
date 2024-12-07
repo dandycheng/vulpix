@@ -2,11 +2,13 @@
 #define CONFIG_H
 
 #include "yaml-cpp/yaml.h"
-#include "packageManager.h"
+#include "configKeys.h"
+#include "shell.h"
 #include <vector>
 #include <string>
 #include <cstdint>
 #include <array>
+#include <iostream>
 
 using namespace std;
 
@@ -47,9 +49,9 @@ typedef enum SubProperty
 
 const std::array<std::pair<int, string>, NUM_SUB_PROPERTIES> g_subProperties
 {{
-    { INSTALL,         "install"    },
-    { ASSUME_YES,      "assume_yes" },
-    { NO_GPG_CHECK,    "nogpgcheck" },
+    { INSTALL,         CFG_KEY_INSTALL      },
+    { ASSUME_YES,      CFG_KEY_ASSUME_YES   },
+    { NO_GPG_CHECK,    CFG_KEY_NO_GPG_CHECK },
 }};
 
 typedef uint16_t requiredPropMask_t;
@@ -70,10 +72,10 @@ void* getDefaultValueStopOnError(void);
 // TODO: Consider using LinkedList for compile time evaluation?
 const property_t g_configTypes[] =
 {
-    // key                required    allowsChildren    getDefaultValue                 dataType    requiredSubPropertyMask
-    { "name",             true,       false,            nullptr,                        STRING,     NO_SUB_PROPERTY        },
-    { "apt",              false,      true,             nullptr,                        STRING,     (INSTALL | ASSUME_YES) },
-    { "stop_on_error",    false,      false,            &getDefaultValueStopOnError,    BOOL,       NO_SUB_PROPERTY        }
+    // key                    required    allowsChildren    getDefaultValue                 dataType    requiredSubPropertyMask
+    { CFG_KEY_NAME,           true,       false,            nullptr,                        STRING,     NO_SUB_PROPERTY        },
+    { CFG_KEY_APT,            false,      true,             nullptr,                        STRING,     (INSTALL | ASSUME_YES) },
+    { CFG_KEY_STOP_ON_ERR,    false,      false,            &getDefaultValueStopOnError,    BOOL,       NO_SUB_PROPERTY        }
 };
 
 class Config
@@ -93,6 +95,9 @@ protected:
     bool hasRequiredSubProperty(const char* key, vector<subProperty_t>* subProperties);
 
     YAML::Node m_config;
+
+private:
+    System* m_sys;
 };
 
 distro_t getDistro(void);

@@ -1,13 +1,13 @@
 #include "config.h"
 #include "logs.h"
 #include "file.h"
-#include "packageManager.h"
-#include <iostream>
+#include "Aptitude.h"
 #include <cstring>
 
 using namespace std;
 
-Config::Config(string configFile)
+Config::Config(string configFile) :
+    m_sys(new System())
 {
     try
     {
@@ -31,12 +31,12 @@ Config::~Config(void)
 bool Config::setupConfig(void)
 {
     string configName { getConfigName() };
-    vector<string> installs { getInstalls("apt") };
+    vector<string> packages { getInstalls("apt") };
 
     cout << "Running config setup: " << configName.c_str() << "\n\n";
-    aptInstallPackages(&installs, m_config["apt"]["assume_yes"].as<bool>(), true);
+    Aptitude apt;
 
-    return true;
+    return apt.installPackage(m_sys, &packages);
 }
 
 const string Config::getConfigName(void)
@@ -117,14 +117,12 @@ bool Config::stopOnError(void)
  */
 vector<string> Config::getInstalls(string key)
 {
-    // TODO: decltype
-    // TODO: Don't hardcode string "install".
     // TODO: Instead of throwing error when the key isn't in the config, print message.
     // FIXME: Update UT lists as well, not just string
-    YAML::Node node { m_config[key]["install"] };
+    YAML::Node node { m_config[key][CFG_KEY_INSTALL] };
     vector<string> packages;
 
-    if (m_config[key]["install"].Type() == YAML::NodeType::Sequence)
+    if (node.Type() == YAML::NodeType::Sequence)
     {
         for (YAML::Node item : node)
         {
