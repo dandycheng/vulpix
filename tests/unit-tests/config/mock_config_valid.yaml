@@ -1,6 +1,0 @@
-name: kernel build
-stop_on_error: true
-apt:
-  assume_yes: true
-  install: |
-      g++ make build-essential

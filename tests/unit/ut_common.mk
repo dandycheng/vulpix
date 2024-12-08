@@ -20,10 +20,11 @@ test: setup-env build-deps $(OUTPUT_OBJ_FILES)
 	$(CXX) $(TEST_CXX_FLAGS) -o out/$(TEST_BINARY) $(filter-out $(OMIT_OBJ_FILES),$(call GET_OBJ_FILES,$(OBJ_DIR) $(OBJ_FILE_PATHS))) -lgtest -lgmock
 	$(OBJ_DIR)/../$(TEST_BINARY)
 
-# Clean with the main Makefile to clean dependencies
+.SILENT:
 clean:
-	$(MAKE) -C $(ROOT_DIR_RELATIVE) clean
+	echo "Cleaning $(TEST_BINARY)..."
+	$(MAKE) -C $(ROOT_DIR_RELATIVE) clean > /dev/null
 	rm -rf out
 
 $(OBJ_DIR)/%.o: $(filter-out $(TEST_BINARY).cpp,./%.cpp)
-	$(CXX) $(TEST_CXX_FLAGS) -o $@ -c $< $(foreach dir,$(INCLUDE_PATHS),-I $(dir));
+	$(CXX) $(TEST_CXX_FLAGS) -o $@ -c $< $(foreach dir,$(INCLUDE_PATHS),-I $(dir))	;
