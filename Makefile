@@ -57,7 +57,6 @@ remove-build-deps:
 
 .PHONY:
 clean: clean-deps
-	echo Cleaning vulpix...
 	rm -rf $(VPX_CLEAN_SOURCES)
 
 # TODO: Update this to remove dependency folders in src

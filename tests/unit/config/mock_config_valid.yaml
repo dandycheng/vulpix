@@ -1,0 +1,6 @@
+name: kernel build
+stop_on_error: true
+package_manager:
+  assume_yes: true
+  install: |
+      g++ make build-essential

@@ -21,7 +21,9 @@ download-yaml-cpp:
 	$(call UNTAR,/tmp/yaml-cpp.tar.gz,yaml-cpp-$(YAML_CPP_VER)/include,$(DEPS_PATH)/yaml-cpp/source)
 
 clean-yaml-cpp:
-	@echo "Cleaning yaml-cpp...";
+	if [ -d "$(OBJ_PATH)/yaml-cpp" ]; then \
+		echo "Cleaning yaml-cpp..."; \
+	fi
 
 build-yaml-cpp: $(subst $(DEPS_PATH),$(OBJ_PATH),$(call GET_OBJ_NAMES,$(DEPS_PATH)/yaml-cpp))
 

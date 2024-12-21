@@ -8,9 +8,8 @@
 
 using namespace std;
 
-class Config_subClassTest : public Config
+class ConfigTest : public Config
 {
 public:
-    Config_subClassTest(string configFile) : Config(configFile) {}
-    bool hasRequiredSubProperty(const char* propertyName, vector<subProperty_t>* subProperties);
+    ConfigTest(string configFile) : Config(configFile) {}
 };

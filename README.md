@@ -9,26 +9,4 @@ When running your development environment on different Linux machines or contain
 
 # Architecture
 
-```
- ┌────────┐                                                             
- │ Config │                                                             
- └┬───────┘                                                             
-  │┌─────────┐                                                          
-  └┼ Modules │                          ┌─────────────────────────────┐ 
-   └┬────────┘                          │ Vulpix core functionalities │ 
-    │ ┌─────────────────────┐           │      ┌───────────────┐      │ 
-    ├─┼ RPM Package Manager ┼┬─extends──┼─────►│Package manager│      │ 
-    │ └─────────────────────┘│          │      └───────────────┘      │ 
-    │ ┌────────┐             │          │      ┌──────────────┐       │ 
-    ├─┼ Zypper ├─────────────┤          │      │ Editor setup │       │ 
-    │ └────────┘             │   ┌──────┼─────►│    manager   │       │ 
-    │ ┌──────────┐           │   │      │      └──────────────┘       │ 
-    ├─┼ Aptitude ┼───────────┘   │      └─────────────────────────────┘ 
-    │ └──────────┘            extends                                   
-    │ ┌────────────┐             │                                      
-    ├─┼ Vim editor ┼─────────────┤                                      
-    │ └────────────┘             │                                      
-    │ ┌────────┐                 │                                      
-    └─┼ Neovim ┼─────────────────┘                                      
-      └────────┘                                                        
-```
+![Architecture](docs/Architecture.jpg)

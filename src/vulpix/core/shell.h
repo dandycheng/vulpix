@@ -1,7 +1,7 @@
 #ifndef SHELL_H
 #define SHELL_H
 
-#include <cstdint>
+#include <stdint.h>
 #include <string>
 #include <vector>
 using namespace std;

@@ -9,75 +9,25 @@ class UnitTestFixture_Config : public testing::Test
 protected:
     void SetUp() override
     {
-        m_config = new Config_subClassTest("mock_config_valid.yaml");
+        config = new ConfigTest("mock_config_valid.yaml");
     }
 
     void TearDown() override
     {
-        delete m_config;
+        delete config;
     }
 
-    Config_subClassTest* m_config;
+    ConfigTest* config;
 };
 
-TEST_F(UnitTestFixture_Config, testConfigDefaultValuesBool)
+TEST_F(UnitTestFixture_Config, testGetConfigName)
 {
-    struct testItem
-    {
-        void* (*func)(void);
-        bool defaultVal;
-    };
-
-    testItem defaultValFuncs[] =
-    {
-        { &getDefaultValueStopOnError, true }
-    };
-
-    for (testItem item : defaultValFuncs)
-    {
-        EXPECT_EQ((bool) item.func(), item.defaultVal);
-    }
+    ASSERT_TRUE(config->getConfigName().compare("kernel build") == 0);
 }
 
-TEST_F(UnitTestFixture_Config, testHasRequiredSubPropertyVariantCase)
+TEST_F(UnitTestFixture_Config, testIsConfigValid)
 {
-    struct testItem
-    {
-        const char* key;
-        vector<subProperty_t> subProperties;
-        bool expect;
-    };
-
-    vector<subProperty_t> emptyVector;
-
-    testItem testItems[] =
-    {
-        { "apt",    { INSTALL, NO_SUB_PROPERTY },    false },
-        { "apt",    { NO_SUB_PROPERTY, INSTALL },    false },
-        { "apt",    emptyVector,                     false }
-    };
-
-    uint8_t testSize = sizeof(testItems) / sizeof(testItems[0]);
-
-    for (uint8_t i = 0; i < testSize; i++)
-    {
-        EXPECT_EQ(m_config->hasRequiredSubProperty("apt", &testItems[i].subProperties), testItems[i].expect);
-    }
-}
-
-TEST_F(UnitTestFixture_Config, testConfigValidity)
-{
-    EXPECT_TRUE(m_config->isConfigValid());
-}
-
-TEST(UnitTest_Config, testGetDistroParameters)
-{
-    regex re = regex("^ID", regex_constants::ECMAScript);
-    smatch match;
-    string dummyString { "ID=ubuntu" };
-
-    ASSERT_EQ(OS_RELEASE_PATH, "/etc/os-release");
-    ASSERT_TRUE(regex_search(dummyString, match, re));
+    ASSERT_TRUE(config->isConfigValid(CFG_PROP_INDEX_LINUX_PACKAGE_MANAGER));
 }
 
 int main()

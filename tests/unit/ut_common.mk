@@ -4,7 +4,7 @@ VPX_HEADERS = $(sort $(dir $(shell find $(ROOT_DIR_RELATIVE)/src/vulpix/* -name 
 OMIT_OBJ_FILES += ../../../src/build/obj/vulpix/main.o
 
 setup-env:
-	$(call MKDIR,$(OBJ_DIR))
+	$(call MKDIR,$(OBJ_PATH))
 
 .SILENT:
 build-deps:
@@ -17,14 +17,14 @@ build-deps:
 .PHONY:
 test: setup-env build-deps $(OUTPUT_OBJ_FILES)
 	echo "Linking $(TEST_BINARY)..."
-	$(CXX) $(TEST_CXX_FLAGS) -o out/$(TEST_BINARY) $(filter-out $(OMIT_OBJ_FILES),$(call GET_OBJ_FILES,$(OBJ_DIR) $(OBJ_FILE_PATHS))) -lgtest -lgmock
-	$(OBJ_DIR)/../$(TEST_BINARY)
+	$(CXX) $(TEST_CXX_FLAGS) -o out/$(TEST_BINARY) $(filter-out $(OMIT_OBJ_FILES),$(call GET_OBJ_FILES,$(OBJ_PATH) $(OBJ_FILE_PATHS))) -lgtest -lgmock
+	$(OBJ_PATH)/../$(TEST_BINARY)
 
 .SILENT:
 clean:
 	echo "Cleaning $(TEST_BINARY)..."
-	$(MAKE) -C $(ROOT_DIR_RELATIVE) clean > /dev/null
+	$(MAKE) -C $(ROOT_DIR_RELATIVE) clean
 	rm -rf out
 
-$(OBJ_DIR)/%.o: $(filter-out $(TEST_BINARY).cpp,./%.cpp)
+$(OBJ_PATH)/%.o: $(filter-out $(TEST_BINARY).cpp,./%.cpp)
 	$(CXX) $(TEST_CXX_FLAGS) -o $@ -c $< $(foreach dir,$(INCLUDE_PATHS),-I $(dir))	;

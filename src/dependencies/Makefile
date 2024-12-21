@@ -6,4 +6,9 @@ include $(DEPENDENCY_MAKEFILES)
 download-deps: $(addprefix download-,$(DEPENDENCIES))
 build-deps: $(addprefix build-,$(BUILD_TARGETS))
 clean-deps: $(addprefix clean-,$(CLEAN_TARGETS))
-	rm -rf $(CLEAN_DIRS)
+	for target in $(CLEAN_DIRS); do \
+		if [ -d "$$target" ]; then \
+			echo "Cleaning up $$target..."; \
+			rm -rf $$target; \
+		fi \
+	done

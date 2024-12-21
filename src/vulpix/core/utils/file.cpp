@@ -1,8 +1,12 @@
 #include "file.h"
 #include <iostream>
 
-string findTextInFile(string filePath, regex re)
-{
+/*
+TODO: Add file compression/archive and decompression/unarchive utility
+        - Compress/uncompresss each file
+*/
+ string findTextInFile(string filePath, regex re)
+ {
     ifstream ss(filePath, fstream::in);
 
     if (ss.good())
