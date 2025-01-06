@@ -32,9 +32,10 @@ bool PackageManagerMacro::runMacro(void)
         System sys;
         YAML::Node packageManagerNode { (*m_config)[CFG_PROP_INDEX_LINUX_PACKAGE_MANAGER] };
         YAML::Node installs           { packageManagerNode[CFG_PROP_INSTALL] };
+        bool assumeYes                { packageManagerNode[CFG_PROP_ASSUME_YES].as<bool>() };
         vector<string> installsVec    { installs.as<vector<string>>() };
 
-        success = m_pkgMgr->installPackage(&sys, &installsVec);
+        success = m_pkgMgr->installPackage(&sys, &installsVec, assumeYes);
     }
 
     return success;
