@@ -14,10 +14,14 @@ typedef enum errorCode
 #define LOG_DEBUG   "DEBUG"
 #define LOG_ERROR   "ERROR"
 
+#define LOG_BOOL_TO_YES_NO(val)      val ? "Yes" : "No"
+
 #ifdef DEBUG
-#define DEBUG_LOG(type, message, ...)   printf("%s() [" type "] " message "\n", __FUNCTION__, __VA_ARGS__)
+#define DEBUG_LOG(type, message, ...)   printf("%s [%s:%d - %s()] " message "\n", type, __FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__)
+#define ERROR_LOG(message, ...)
 #else
-#define DEBUG_LOG(type, message, ...)   if (type == LOG_ERROR) printf("An error has occured: %s\n", message);
+#define DEBUG_LOG(type, message, ...)
+#define ERROR_LOG(message, ...)         printf("ERROR [%s:%d - %s()] " message "\n", __FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__)
 #endif
 
 #endif
