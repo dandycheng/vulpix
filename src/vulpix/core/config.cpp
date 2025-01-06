@@ -59,6 +59,7 @@ bool Config::setupConfig(void)
     else
     {
         ERROR_LOG("Config file is invalid!");
+        return false;
     }
 
     return success;
