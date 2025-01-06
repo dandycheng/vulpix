@@ -1,7 +1,25 @@
 name: kernel build
 stop_on_error: true
-apt:
+user_modules:
+    - Create dev directory:
+        command: mkdir -p ~/dev
+        stdout_var: mkdir_res
+    - Pull repo:
+        rules:
+            - if: ${mkdir_res} == 'success'
+              then:
+                command: echo "success"
+
+package_manager:
+    lambdas:
+        foreach:
+            data: str.concat
+            macro: aptitude_install
+            result_var: res
     assume_yes: true
+    sub_components:
+        install:
+            - sub_comp1
     install:
         - bison
         - build-essential
@@ -22,3 +40,6 @@ apt:
         - cpio
         - perl
         - file
+git:
+    user.name: Dandy Cheng
+    user.email: cheng.dandy@gmail.com
