@@ -1,64 +1,36 @@
-#################################
-#   Vulpix specific variables   #
-#################################
+VULPIX_VER := 0.0.1-rc1
 
-SRC_PATH := src
-DEPS_PATH := $(SRC_PATH)/dependencies
-TEST_PATH := tests
-UNIT_TEST_PATH := $(TEST_PATH)/unit-tests
-OBJ_PATH := $(SRC_PATH)/build/obj
-BUILD_OUT_PATH := $(SRC_PATH)/build/out
+$(if $(VPX_ROOT_DIR),,$(error Build environment is not setup, run setup_env.sh first))
 
-CXX := g++
-MAKEFLAGS += --no-print-directory
-CXX_FLAGS := -std=c++14	
-
-include ./utils.mk
-include $(DEPS_PATH)/Makefile
+include tools/scripts/vars.mk
+include tools/scripts/utils.mk
 include $(SRC_PATH)/Makefile
+include $(DEPS_PATH)/Makefile
 
-VPX_CLEAN_SOURCES := \
+CLEAN_DIRS := \
 	$(SRC_PATH)/build \
 	$(OBJ_PATH)/vulpix
 
-BUILD_DEPENDENCIES := \
-	cmake \
-	g++ \
-
-TEST_DEPENDENCIES := \
-	libgtest-dev \
-	libgmock-dev \
-
-PKG_MANAGER = $(shell which apt || which zypper || which yum)
-
-setup-env:
-	@echo "\nSetting up build environment..."
-	$(call MKDIR,$(SRC_PATH))
-	$(call MKDIR,$(DEPS_PATH))
-	$(call MKDIR,$(OBJ_PATH))
-	$(call MKDIR,$(BUILD_OUT_PATH))
-
 install-build-deps:
 	sudo $(PKG_MANAGER) update; \
-	for dep in $(BUILD_DEPENDENCIES); do \
+	for dep in $(BUILD_DEPS); do \
 		if [ -n "`dpkg -l | grep $$dep | awk '{print $2}'`" ]; then \
 			echo "$$dep is already installed."; \
 		else \
-			sudo $(PKG_MANAGER) install -y $(BUILD_DEPENDENCIES); \
+			sudo $(PKG_MANAGER) install -y $(BUILD_DEPS); \
 		fi \
 	done
 
 install-test-deps:
 	sudo $(PKG_MANAGER) update
-	sudo $(PKG_MANAGER) install -y $(TEST_DEPENDENCIES)
+	sudo $(PKG_MANAGER) install -y $(TEST_DEPS)
 
 remove-build-deps:
-	sudo $(PKG_MANAGER) remove -y $(BUILD_DEPENDENCIES)
+	sudo $(PKG_MANAGER) remove -y $(BUILD_DEPS)
 
 .PHONY:
 clean: clean-deps
-	rm -rf $(VPX_CLEAN_SOURCES)
+	rm -rf $(CLEAN_DIRS)
 
-# TODO: Update this to remove dependency folders in src
 cleanall: clean
 	rm -rf $(CLEAN_SRCS)

@@ -14,7 +14,7 @@ PackageManagerMacro::~PackageManagerMacro(void)
 {
 }
 
-bool PackageManagerMacro::runMacro(void)
+bool PackageManagerMacro::runMacro(macroData_t data)
 {
     bool success { false };
 
@@ -30,10 +30,10 @@ bool PackageManagerMacro::runMacro(void)
     if (m_pkgMgr != nullptr)
     {
         System sys;
-        YAML::Node packageManagerNode { (*m_config)[CFG_PROP_INDEX_LINUX_PACKAGE_MANAGER] };
-        YAML::Node installs           { packageManagerNode[CFG_PROP_INSTALL] };
-        bool assumeYes                { packageManagerNode[CFG_PROP_ASSUME_YES].as<bool>() };
-        vector<string> installsVec    { installs.as<vector<string>>() };
+        node_t packageManagerNode  { (*m_config)[CFG_PROP_INDEX_LINUX_PACKAGE_MANAGER] };
+        node_t installs            { packageManagerNode[CFG_PROP_INSTALL] };
+        bool assumeYes             { packageManagerNode[CFG_PROP_ASSUME_YES].as<bool>() };
+        vector<string> installsVec { installs.as<vector<string>>() };
 
         success = m_pkgMgr->installPackage(&sys, &installsVec, assumeYes);
     }
@@ -41,7 +41,7 @@ bool PackageManagerMacro::runMacro(void)
     return success;
 }
 
-bool PackageManagerMacro::undoMacro(void)
+bool PackageManagerMacro::undoMacro(macroData_t data)
 {
     return true;    // TODO: Complete
 }

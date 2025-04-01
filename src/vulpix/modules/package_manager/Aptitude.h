@@ -9,8 +9,11 @@ public:
     Aptitude(void);
     virtual ~Aptitude(void);
 
-    // virtual bool updatePackageInfo(void) override;
-    // virtual bool removePackage(vector<string>) override;
+    // virtual bool updatePackageInfo(void);
+    virtual bool installPackage(SystemInterface* sys, vector<string>* packages, bool assumeYes = true, bool skipMalformedPackages = true);
+    virtual bool removePackage(SystemInterface* sys, vector<string>* packages, bool assumeYes = true, bool skipMalformedPackages = true);
+private:
+    string m_cmd;
 };
 
 #endif

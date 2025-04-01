@@ -1,6 +1,6 @@
-include ../../../../utils.mk
-include ../../../test_common.mk
-include ../../ut_common.mk
+include $(VPX_ROOT_DIR)/makefiles/utils.mk
+include $(VULPIX_TESTS)/common.mk
+include $(VULPIX_TESTS)/unit/ut_common.mk
 
 TEST_BINARY := sanitizerTest
 DEPENDENCIES := yaml-cpp

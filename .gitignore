@@ -1,4 +1,6 @@
 src/build
+out/*
 
+*.vscode
 *.obj
 *.o

@@ -2,6 +2,7 @@
 #include "logs.h"
 #include "file.h"
 #include "Aptitude.h"
+#include "PackageManagerMacro.h"
 #include <cstring>
 #include <iostream>
 
@@ -53,7 +54,6 @@ bool Config::setupConfig(void)
         for (configPropIndex_t i = 0; i < CFG_MAX_INDEX; i++)
         {
             success &= runModuleMacro(i);
-            DEBUG_LOG(LOG_DEBUG, "Running macro (index: %X)", i);
         }
     }
     else
@@ -110,7 +110,7 @@ bool Config::verifyConfigFile(void)
     return true;
 }
 
-vector<string> Config::strNodeToVec(YAML::Node node)
+vector<string> Config::strNodeToVec(node_t node)
 {
     string contents { node.as<string>() };
     vector<string> result;
@@ -131,19 +131,19 @@ vector<string> Config::strNodeToVec(YAML::Node node)
 
 bool Config::runModuleMacro(configPropIndex_t index)
 {
-    switch (index)
-    {
-        case CFG_PROP_INDEX_LINUX_PACKAGE_MANAGER:
-            return PackageManagerMacro(this).runMacro();
+    // switch (index)
+    // {
+    //     case CFG_PROP_INDEX_LINUX_PACKAGE_MANAGER:
+    //         return PackageManagerMacro(this).runMacro((void*) &(m_config[CFG_PROP_LINUX_PKG_MANAGER]));
 
-        default:
-            break;
-    }
+    //     default:
+    //         break;
+    // }
 
     return false;
 }
 
-YAML::Node Config::operator [] (configPropIndex_t index)
+node_t Config::operator [] (configPropIndex_t index)
 {
     return m_config[CONFIG_TABLE[index].key];
 }

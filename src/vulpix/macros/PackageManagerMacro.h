@@ -10,8 +10,9 @@ class PackageManagerMacro : public MacroBase
 public:
     PackageManagerMacro(Config* config);
     ~PackageManagerMacro(void);
-    virtual bool runMacro(void);
-    virtual bool undoMacro(void);
+
+    virtual bool runMacro(macroData_t data);
+    virtual bool undoMacro(macroData_t data);
 
 private:
     PackageManagerBase* m_pkgMgr;

@@ -19,16 +19,14 @@ class PackageManagerBase
 {
 public:
     PackageManagerBase(packageManager_t packageManagerType);
-    ~PackageManagerBase(void);
+    virtual ~PackageManagerBase(void);
 
     // virtual bool updatePackageInfo(void);
-    virtual bool installPackage(SystemInterface* sys, vector<string>* packages, bool assumeYes = true, bool skipMalformedPackages = true);
-    // virtual bool removePackage(vector<string> packages);
+    virtual bool installPackage(SystemInterface* sys, vector<string>* packages, bool assumeYes = true, bool skipMalformedPackages = true) = 0;
+    virtual bool removePackage(SystemInterface* sys, vector<string>* packages, bool assumeYes = true, bool skipMalformedPackages = true) = 0;
     virtual bool sanitizePackageNames(vector<string>* packages, bool printInvalidPackagenames = true);
 
 private:
-    string m_cmd;
-    packageManager_t m_pkgMgr;
 };
 
 #endif

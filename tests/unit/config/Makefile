@@ -1,19 +1,16 @@
-include ../../../utils.mk
-include ../../test_common.mk
-include ../ut_common.mk
+include $(VPX_ROOT_DIR)/tools/scripts/utils.mk
+include $(VULPIX_TESTS)/unit/ut_common.mk
 
 TEST_BINARY := configTest
 DEPENDENCIES := yaml-cpp
 
 INCLUDE_PATHS := \
 	$(VPX_HEADERS) \
-	$(ROOT_DIR_RELATIVE)/src/dependencies/yaml-cpp/source/include \
+	$(VPX_ROOT_DIR)/src/dependencies/yaml-cpp/source/include \
 	../../test-framework/mocks \
 	../../test-framework/mocks/stdlib
 	
 OBJ_FILE_PATHS := \
-	$(ROOT_DIR_RELATIVE)/src/build/obj/yaml-cpp/source \
-	$(ROOT_DIR_RELATIVE)/src/build/obj/vulpix \
+	$(VPX_ROOT_DIR)/src/build/obj/yaml-cpp/source \
+	$(VPX_ROOT_DIR)/src/build/obj/vulpix \
 	../../test-framework/out/obj/mocks
-
-OMIT_OBJ_FILES += $(ROOT_DIR_RELATIVE)/src/build/obj/vulpix/main.o

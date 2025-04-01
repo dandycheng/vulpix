@@ -3,27 +3,8 @@
 #include "shell.h"
 #include <iostream>
 
-PackageManagerBase::PackageManagerBase(packageManager_t packageManagerType) :
-    m_pkgMgr(packageManagerType)
+PackageManagerBase::PackageManagerBase(packageManager_t packageManagerType)
 {
-    switch (packageManagerType)
-    {
-    case APTITUDE:
-        m_cmd = "apt";
-        break;
-
-    case RPM:
-        m_cmd = "rpm";
-        break;
-
-    case ZYPPER:
-        m_cmd = "zypper";
-        break;
-
-    default:
-        m_cmd = "";
-        break;
-    }
 }
 
 PackageManagerBase::~PackageManagerBase(void)
@@ -54,24 +35,10 @@ bool PackageManagerBase::sanitizePackageNames(vector<string>* packages, bool pri
 
 bool PackageManagerBase::installPackage(SystemInterface* sys, vector<string>* packages, bool assumeYes, bool skipMalformedPkgs)
 {
-    returnCode_t retCode { COMMAND_UNSUCCESSFUL };
-    vector<string> cmdPrefix { "sudo", m_cmd, "install" };
-    bool hasMalformedPkgs { sanitizePackageNames(packages) };
+    return COMMAND_SUCCESSFUL;
+}
 
-    if (hasMalformedPkgs && !skipMalformedPkgs)
-    {
-        cout << "Stopping.";
-    }
-    else
-    {
-        if (assumeYes)
-        {
-            cmdPrefix.push_back("-y");
-        }
-
-        packages->insert(packages->begin(), cmdPrefix.begin(), cmdPrefix.end());
-        retCode = runCmd(sys, joinCmd(packages).c_str());
-    }
-
-    return retCode == COMMAND_SUCCESSFUL;
+bool PackageManagerBase::removePackage(SystemInterface* sys, vector<string>* packages, bool assumeYes, bool skipMalformedPkgs)
+{
+    return COMMAND_UNSUCCESSFUL;
 }

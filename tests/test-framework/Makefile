@@ -1,8 +1,5 @@
 include ../../utils.mk
 
-# TODO: Refactor
-VPX_HEADERS = $(sort $(dir $(shell find ../../../../src/vulpix/* -name '*.h' -or -name '*.hpp')))
-
 INCLUDE_PATHS := \
 	mocks \
 	mocks/stdlib \

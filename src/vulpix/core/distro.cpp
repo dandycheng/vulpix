@@ -10,9 +10,9 @@ distro_t getDistro(void)
     {
         distro = distro.substr(3, distro.length());    // Trim off the "ID="
         std::transform(distro.begin(), distro.end(), distro.begin(), ::tolower);
-        if (distro == "ubuntu") return UBUNTU;
+        if (distro == "ubuntu")   return UBUNTU;
         if (distro == "opensuse") return OPEN_SUSE;
-        if (distro == "redhat") return REDHAT;
+        if (distro == "redhat")   return REDHAT;
     }
 
     DEBUG_LOG(LOG_ERROR, "Unable to open file: %s", OS_RELEASE_PATH);

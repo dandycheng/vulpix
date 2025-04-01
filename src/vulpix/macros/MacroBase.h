@@ -4,15 +4,16 @@
 class Config;
 
 typedef bool (*macro_t)(void);
+typedef void* macroData_t;
 
 class MacroBase
 {
 public:
     MacroBase(Config* config);
-    ~MacroBase(void);
+    virtual ~MacroBase(void);
 
-    virtual bool runMacro(void) = 0;
-    virtual bool undoMacro(void) = 0;
+    virtual bool runMacro(macroData_t data) = 0;
+    virtual bool undoMacro(macroData_t data) = 0;
 
 protected:
     Config* m_config;

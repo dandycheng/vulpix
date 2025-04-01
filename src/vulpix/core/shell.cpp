@@ -2,7 +2,7 @@
 
 string joinCmd(vector<string>* cmd, string separator)
 {
-    string result = "";
+    string result { "" };
 
     for (vector<string>::iterator i = cmd->begin(); i != cmd->end(); i++)
     {

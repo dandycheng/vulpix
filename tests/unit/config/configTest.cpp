@@ -25,9 +25,9 @@ TEST_F(UnitTestFixture_Config, testGetConfigName)
     ASSERT_TRUE(config->getConfigName().compare("kernel build") == 0);
 }
 
-TEST_F(UnitTestFixture_Config, testIsConfigValid)
+TEST_F(UnitTestFixture_Config, testIsConfigPropertyValid)
 {
-    ASSERT_TRUE(config->isConfigValid(CFG_PROP_INDEX_LINUX_PACKAGE_MANAGER));
+    ASSERT_TRUE(config->isConfigPropValid(CFG_PROP_INDEX_LINUX_PACKAGE_MANAGER));
 }
 
 int main()

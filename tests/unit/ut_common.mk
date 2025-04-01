@@ -1,30 +1,28 @@
-MAKEFLAGS += --no-print-directory
-ROOT_DIR_RELATIVE := ../../..
-VPX_HEADERS = $(sort $(dir $(shell find $(ROOT_DIR_RELATIVE)/src/vulpix/* -name '*.h' -or -name '*.hpp')))
-OMIT_OBJ_FILES += ../../../src/build/obj/vulpix/main.o
+include $(VULPIX_TESTS)/common.mk
 
-setup-env:
-	$(call MKDIR,$(OBJ_PATH))
+VPX_HEADERS         = $(sort $(dir $(shell find $(VPX_ROOT_DIR)/src/vulpix/* -name '*.h' -or -name '*.hpp')))
+OMIT_OBJ_FILES      += $(VPX_ROOT_DIR)/src/build/obj/vulpix/main.o
+GET_TEST_OBJ_FILES  = $(filter-out $(OMIT_OBJ_FILES),$(call GET_OBJ_FILES,$(OBJ_PATH) $(OBJ_FILE_PATHS)))
 
 .SILENT:
 build-deps:
 	echo "Building test dependencies...";
-	if [ -n "$(DEPENDENCIES)" ]; then \
-		$(foreach dep,build-$(DEPENDENCIES),$(MAKE) -C $(ROOT_DIR_RELATIVE)/ $(dep) DEBUG=1;) \
-	fi
-	$(MAKE) -C $(ROOT_DIR_RELATIVE)/ build-vulpix-objs DEBUG=1;
+	$(if $(DEPENDENCIES),$(foreach dep,build-$(DEPENDENCIES),$(MAKE) -C $(VPX_ROOT_DIR)/ $(dep) DEBUG=1;),)
+	$(MAKE) -C $(VPX_ROOT_DIR)/ build-vulpix-objs DEBUG=1;
 
 .PHONY:
-test: setup-env build-deps $(OUTPUT_OBJ_FILES)
+test: create-dirs build-deps $(OUTPUT_OBJ_FILES)
 	echo "Linking $(TEST_BINARY)..."
-	$(CXX) $(TEST_CXX_FLAGS) -o out/$(TEST_BINARY) $(filter-out $(OMIT_OBJ_FILES),$(call GET_OBJ_FILES,$(OBJ_PATH) $(OBJ_FILE_PATHS))) -lgtest -lgmock
+	$(call CXX_LINKALL,out/$(TEST_BINARY),$(call GET_TEST_OBJ_FILES),$(TEST_LIBS))
 	$(OBJ_PATH)/../$(TEST_BINARY)
 
-.SILENT:
+cleanall: clean
+	echo "Cleaning vulpix..."
+	$(MAKE) -C $(VPX_ROOT_DIR) clean
+
 clean:
 	echo "Cleaning $(TEST_BINARY)..."
-	$(MAKE) -C $(ROOT_DIR_RELATIVE) clean
 	rm -rf out
 
 $(OBJ_PATH)/%.o: $(filter-out $(TEST_BINARY).cpp,./%.cpp)
-	$(CXX) $(TEST_CXX_FLAGS) -o $@ -c $< $(foreach dir,$(INCLUDE_PATHS),-I $(dir))	;
+	$(call CXX_COMPILE,$<,$@,$(foreach dir,$(INCLUDE_PATHS),-I $(dir)))
