@@ -15,10 +15,9 @@ YAML_CPP_INCLUDES = \
 BUILD_TARGETS += yaml-cpp
 CLEAN_TARGETS += yaml-cpp
 CLEAN_DIRS += $(OBJ_PATH)/yaml-cpp
-CLEAN_SRCS += $(DEPS_PATH)/yaml-cpp/source
 
 .SILENT:
-cleanup:
+clean-yaml-cpp:
 	$(call RMDIR,$(OBJ_PATH)/yaml-cpp)
 
 download-yaml-cpp:
