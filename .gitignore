@@ -1,6 +1,6 @@
 src/build
-out/*
+artifacts
 
 *.vscode
-*.obj
+*.so
 *.o
