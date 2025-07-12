@@ -11,7 +11,7 @@ MacroBase::~MacroBase(void)
 {
 }
 
-bool MacroBase::runMacro(macroData_t data)
+bool MacroBase::runMacro(macroData_t data, bool isUndo)
 {
     return false;
 }

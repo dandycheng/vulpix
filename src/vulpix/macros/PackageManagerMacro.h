@@ -11,7 +11,9 @@ public:
     PackageManagerMacro(Config* config);
     ~PackageManagerMacro(void);
 
-    virtual bool runMacro(macroData_t data);
+    virtual bool runMacro(macroData_t data, bool isUndo);
+
+private:
     virtual bool undoMacro(macroData_t data);
 
 private:

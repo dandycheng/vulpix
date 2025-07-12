@@ -53,7 +53,10 @@ bool Config::setupConfig(void)
     {
         for (configPropIndex_t i = 0; i < CFG_MAX_INDEX; i++)
         {
-            success &= runModuleMacro(i);
+            if (CONFIG_TABLE[i].hasMacro)
+            {
+                success &= runModuleMacro(i);
+            }
         }
     }
     else
@@ -131,11 +134,20 @@ vector<string> Config::strNodeToVec(node_t node)
 
 bool Config::runModuleMacro(configPropIndex_t index)
 {
+    bool isUndo = false;
+    string propKey = CONFIG_TABLE[index].key;
+    string undoPropKey = CONFIG_TABLE[CFG_PROP_INDEX_UNDO].key;
+
+    if (!m_config[propKey][undoPropKey].IsNull() && 
+        m_config[propKey][undoPropKey].as<bool>())
+    {
+        isUndo = true;
+    }
 
     switch (index)
     {
         case CFG_PROP_INDEX_LINUX_PACKAGE_MANAGER:
-            return PackageManagerMacro(this).runMacro(m_config[index]);
+            return PackageManagerMacro(this).runMacro(m_config[index], isUndo);
 
         default:
             break;

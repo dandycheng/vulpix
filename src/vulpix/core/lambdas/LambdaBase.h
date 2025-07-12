@@ -21,14 +21,14 @@ public:
     LambdaBase(Config* config);
     ~LambdaBase(void);
 
-    bool addMacro(macro_t macro, macro_t teardown);
+    bool addMacro(macroPtr_t macro, macroPtr_t teardown);
     bool teardown(void);
     virtual bool runLambda(void) = 0;
     virtual bool undoLambda(void) = 0;
 
 private:
-    macro_t* m_macros;
-    macro_t* m_teardownMacros;
+    macroPtr_t* m_macros;
+    macroPtr_t* m_teardownMacros;
     uint8_t m_numMacros;
     Config* m_config;
 };

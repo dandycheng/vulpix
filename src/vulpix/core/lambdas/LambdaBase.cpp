@@ -4,8 +4,8 @@
 
 LambdaBase::LambdaBase(Config* config) :
     m_config(config),
-    m_macros(new macro_t[MAX_NUM_OF_MACROS]),
-    m_teardownMacros(new macro_t[MAX_NUM_OF_MACROS]),
+    m_macros(new macroPtr_t[MAX_NUM_OF_MACROS]),
+    m_teardownMacros(new macroPtr_t[MAX_NUM_OF_MACROS]),
     m_numMacros(0)
 {
     memset(m_macros, 0, sizeof(m_macros));
@@ -21,7 +21,7 @@ LambdaBase::~LambdaBase(void)
     delete m_macros;
 }
 
-bool LambdaBase::addMacro(macro_t macro, macro_t teardown)
+bool LambdaBase::addMacro(macroPtr_t macro, macroPtr_t teardown)
 {
     if ((macro != nullptr) && (m_numMacros < MAX_NUM_OF_MACROS - 1))
     {

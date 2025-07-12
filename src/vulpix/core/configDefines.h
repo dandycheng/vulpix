@@ -22,12 +22,13 @@ typedef struct property
     unsigned int role : MAX_PROP_ROLE_BITS;
     unsigned int childPropsRequiredMask : MAX_CHILD_PROPS_BITS;
     funcPtr_t getDefaultValue;
+    bool hasMacro;
 } property_t;
 
 
-#define CFG_PROP_ROLE_PARENT          1
-#define CFG_PROP_ROLE_CHILD           2
-#define CFG_PROP_ROLE_BOTH            3
+#define CFG_PROP_ROLE_PARENT          0x1
+#define CFG_PROP_ROLE_CHILD           0x2
+#define CFG_PROP_ROLE_BOTH            0x3
 
 #define DEFINE_CFG_STR(config)        (string) config
 #define CFG_PROP_STOP_ON_ERR          DEFINE_CFG_STR("stop_on_error")
@@ -41,6 +42,7 @@ typedef struct property
 #define CFG_PROP_NAME                 DEFINE_CFG_STR("name")
 #define CFG_PROP_ASSUME_YES           DEFINE_CFG_STR("assume_yes")
 #define CFG_PROP_NO_GPG_CHECK         DEFINE_CFG_STR("no_gpg_check")
+#define CFG_PROP_UNDO                 DEFINE_CFG_STR("undo")
 
 // Properties: Maps to CONFIG_TABLE, increment CFG_MAX_INDEX by 1 when adding a new config index.
 // Use configPropIndex_t.
@@ -51,22 +53,26 @@ typedef struct property
 #define CFG_PROP_INDEX_INSTALL                  0x0003
 #define CFG_PROP_INDEX_STOP_ON_ERR              0x0004
 #define CFG_PROP_INDEX_NO_GPG_CHECK             0x0005
+#define CFG_PROP_INDEX_UNDO                     0x0006
+
 
 // WARNING: Config indices must be less than CFG_MAX_INDEX!
-#define CFG_MAX_INDEX                   0x0006
+#define CFG_MAX_INDEX                           0x0007
 
-#define CFG_CHILD_PROPS(...)    { __VA_ARGS__ }
+#define CFG_DEFAULT_PROPS       CFG_PROP_UNDO
+#define CFG_CHILD_PROPS(...)    { __VA_ARGS__, CFG_PROP_INDEX_UNDO }
 #define CFG_PROP_LINUX_PKG_MANAGER_CHILD_PROPS    CFG_CHILD_PROPS(CFG_PROP_INDEX_INSTALL, CFG_PROP_INDEX_ASSUME_YES, CFG_PROP_INDEX_NO_GPG_CHECK)
 
 property_t const CONFIG_TABLE[]
 {
-//    key                            required    childProps                                 role                    childPropsRequiredMask           getDefaultValue
-    { CFG_PROP_NAME,                 true,       { },                                       CFG_PROP_ROLE_BOTH,      CHILD_PROP_MASK_ALL_REQUIRED,    nullptr         },
-    { CFG_PROP_LINUX_PKG_MANAGER,    false,      CFG_PROP_LINUX_PKG_MANAGER_CHILD_PROPS,    CFG_PROP_ROLE_PARENT,    0b001,                           nullptr         },
-    { CFG_PROP_ASSUME_YES,           false,      { },                                       CFG_PROP_ROLE_CHILD,     CHILD_PROP_MASK_ALL_REQUIRED,    nullptr         },
-    { CFG_PROP_INSTALL,              true,       { },                                       CFG_PROP_ROLE_CHILD,     CHILD_PROP_MASK_ALL_REQUIRED,    nullptr         },
-    { CFG_PROP_STOP_ON_ERR,          false,      { },                                       CFG_PROP_ROLE_PARENT,    CHILD_PROP_MASK_ALL_REQUIRED,    nullptr         },
-    { CFG_PROP_NO_GPG_CHECK,         false,      { },                                       CFG_PROP_ROLE_CHILD,     CHILD_PROP_MASK_ALL_REQUIRED,    nullptr         }
+//    key                            required    childProps                                 role                    childPropsRequiredMask           getDefaultValue    hasMacro
+    { CFG_PROP_NAME,                 true,       { },                                       CFG_PROP_ROLE_BOTH,      CHILD_PROP_MASK_ALL_REQUIRED,    nullptr,          false   },
+    { CFG_PROP_LINUX_PKG_MANAGER,    false,      CFG_PROP_LINUX_PKG_MANAGER_CHILD_PROPS,    CFG_PROP_ROLE_PARENT,    0b001,                           nullptr,          true   },
+    { CFG_PROP_ASSUME_YES,           false,      { },                                       CFG_PROP_ROLE_CHILD,     CHILD_PROP_MASK_ALL_REQUIRED,    nullptr,          false   },
+    { CFG_PROP_INSTALL,              true,       { },                                       CFG_PROP_ROLE_CHILD,     CHILD_PROP_MASK_ALL_REQUIRED,    nullptr,          false   },
+    { CFG_PROP_STOP_ON_ERR,          false,      { },                                       CFG_PROP_ROLE_PARENT,    CHILD_PROP_MASK_ALL_REQUIRED,    nullptr,          false   },
+    { CFG_PROP_NO_GPG_CHECK,         false,      { },                                       CFG_PROP_ROLE_CHILD,     CHILD_PROP_MASK_ALL_REQUIRED,    nullptr,          false   },
+    { CFG_PROP_UNDO,                 false,      { },                                       CFG_PROP_ROLE_CHILD,     CHILD_PROP_MASK_ALL_REQUIRED,    nullptr,          false   }
 };
 
 #endif

@@ -11,6 +11,7 @@ user_modules:
                 command: echo "success"
 
 package_manager:
+    undo: false
     lambdas:
         foreach:
             data: str.concat

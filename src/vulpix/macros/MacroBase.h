@@ -5,7 +5,7 @@
 
 class Config;
 
-typedef bool (*macro_t)(void);
+typedef bool (*macroPtr_t)(void);
 typedef YAML::Node macroData_t;
 
 class MacroBase
@@ -14,7 +14,9 @@ public:
     MacroBase(Config* config);
     virtual ~MacroBase(void);
 
-    virtual bool runMacro(macroData_t data) = 0;
+    virtual bool runMacro(macroData_t data, bool isUndo = false) = 0;
+
+protected:
     virtual bool undoMacro(macroData_t data) = 0;
 
 protected:
