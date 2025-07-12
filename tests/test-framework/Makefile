@@ -1,9 +1,9 @@
-include ../../utils.mk
+include $(VPX_ROOT_DIR)/tools/scripts/utils.mk
 
 INCLUDE_PATHS := \
 	mocks \
 	mocks/stdlib \
-	../../src/dependencies/yaml-cpp/source/include
+	$(DEPS_PATH)/yaml-cpp/source/include
 
 mocks: $(addprefix out/obj/,$(call GET_OBJ_NAMES,mocks))
 

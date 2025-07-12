@@ -30,7 +30,4 @@ remove-build-deps:
 
 .PHONY:
 clean: clean-deps
-	rm -rf $(CLEAN_DIRS)
-
-cleanall: clean
-	rm -rf $(CLEAN_SRCS)
+	$(foreach dir,$(CLEAN_DIRS),$(call RMDIR,$(dir)))

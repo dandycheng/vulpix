@@ -1,28 +1,35 @@
-include $(VULPIX_TESTS)/common.mk
+UT_COMMON_MAKEFILE_INCLUDE_DIRECTIVE := 1
 
-VPX_HEADERS         = $(sort $(dir $(shell find $(VPX_ROOT_DIR)/src/vulpix/* -name '*.h' -or -name '*.hpp')))
-OMIT_OBJ_FILES      += $(VPX_ROOT_DIR)/src/build/obj/vulpix/main.o
-GET_TEST_OBJ_FILES  = $(filter-out $(OMIT_OBJ_FILES),$(call GET_OBJ_FILES,$(OBJ_PATH) $(OBJ_FILE_PATHS)))
+include $(VPX_TESTS)/common.mk
+include $(VPX_ROOT_DIR)/tools/scripts/common.mk
+include $(VPX_ROOT_DIR)/tools/scripts/utils.mk
 
+TEST_OBJ_FILES          = $(subst ./,$(OBJ_PATH)/,$(call GET_OBJ_NAMES,.))
+GET_TEST_DEP_OBJ_FILES  = $(filter-out $(OMIT_OBJ_FILES),$(call GET_OBJ_FILES,$(OBJ_FILE_PATHS)))
+OMIT_OBJ_FILES          := $(SRC_PATH)/build/obj/vulpix/main.o
+
+# TODO: Create debug and release tests (maybe consider stop using compiled object files and include headers instead?)
 .SILENT:
 build-deps:
 	echo "Building test dependencies...";
-	$(if $(DEPENDENCIES),$(foreach dep,build-$(DEPENDENCIES),$(MAKE) -C $(VPX_ROOT_DIR)/ $(dep) DEBUG=1;),)
+	$(if $(DEPENDENCIES),$(foreach dep,build-$(DEPENDENCIES),$(MAKE) -C $(VPX_ROOT_DIR) $(dep) DEBUG=1;),)
 	$(MAKE) -C $(VPX_ROOT_DIR)/ build-vulpix-objs DEBUG=1;
 
+setup-env:
+	$(call MKDIR,$(CURDIR)/$(OBJ_PATH))
+
 .PHONY:
-test: create-dirs build-deps $(OUTPUT_OBJ_FILES)
+test: setup-env build-deps $(TEST_OBJ_FILES)
 	echo "Linking $(TEST_BINARY)..."
-	$(call CXX_LINKALL,out/$(TEST_BINARY),$(call GET_TEST_OBJ_FILES),$(TEST_LIBS))
-	$(OBJ_PATH)/../$(TEST_BINARY)
+	$(call CXX_LINKALL,out/$(TEST_BINARY),$(call GET_TEST_DEP_OBJ_FILES) $(TEST_OBJ_FILES),$(TEST_LIBS))
+	$(TEST_BINARY_PATH)/$(TEST_BINARY)
 
 cleanall: clean
-	echo "Cleaning vulpix..."
 	$(MAKE) -C $(VPX_ROOT_DIR) clean
 
 clean:
 	echo "Cleaning $(TEST_BINARY)..."
 	rm -rf out
 
-$(OBJ_PATH)/%.o: $(filter-out $(TEST_BINARY).cpp,./%.cpp)
-	$(call CXX_COMPILE,$<,$@,$(foreach dir,$(INCLUDE_PATHS),-I $(dir)))
+$(OBJ_PATH)/%.o: %.cpp
+	 $(call CXX_COMPILE,$<,$@,$(foreach dir,$(INCLUDE_PATHS),-I $(dir)))

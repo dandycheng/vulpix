@@ -2,8 +2,8 @@
 
 set_env_vars ()
 {
-    export VPX_ROOT_DIR="$(pwd | sed 's/ /\\ /g')"
-    export VULPIX_TESTS="$VPX_ROOT_DIR/tests"
+    export VPX_ROOT_DIR="$(git rev-parse --show-toplevel | sed 's/ /\\ /g')"
+    export VPX_TESTS="$VPX_ROOT_DIR/tests"
 }
 
 create_dirs ()

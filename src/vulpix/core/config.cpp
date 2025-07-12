@@ -131,14 +131,15 @@ vector<string> Config::strNodeToVec(node_t node)
 
 bool Config::runModuleMacro(configPropIndex_t index)
 {
-    // switch (index)
-    // {
-    //     case CFG_PROP_INDEX_LINUX_PACKAGE_MANAGER:
-    //         return PackageManagerMacro(this).runMacro((void*) &(m_config[CFG_PROP_LINUX_PKG_MANAGER]));
 
-    //     default:
-    //         break;
-    // }
+    switch (index)
+    {
+        case CFG_PROP_INDEX_LINUX_PACKAGE_MANAGER:
+            return PackageManagerMacro(this).runMacro(m_config[index]);
+
+        default:
+            break;
+    }
 
     return false;
 }

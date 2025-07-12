@@ -16,7 +16,7 @@ typedef enum errorCode
 
 #define LOG_BOOL_TO_YES_NO(val)      val ? "Yes" : "No"
 
-#ifdef DEBUG
+#ifdef DEBUG_LOG_ENABLE
 #define DEBUG_LOG(type, message, ...)   printf("%s [%s:%d - %s()] " message "\n", type, __FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__)
 #define ERROR_LOG(message, ...)
 #else

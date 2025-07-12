@@ -13,8 +13,6 @@
 
 // TODO: Create wrapper for YAML parser
 
-typedef YAML::Node node_t;
-
 class Config
 {
 public:

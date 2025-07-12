@@ -1,10 +1,12 @@
 #ifndef MACRO_BASE_H
 #define MACRO_BASE_H
 
+#include "yaml-cpp/yaml.h"
+
 class Config;
 
 typedef bool (*macro_t)(void);
-typedef void* macroData_t;
+typedef YAML::Node macroData_t;
 
 class MacroBase
 {

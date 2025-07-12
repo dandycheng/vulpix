@@ -1,7 +1,14 @@
 include $(VPX_ROOT_DIR)/tools/scripts/utils.mk
 include $(VPX_ROOT_DIR)/tools/scripts/common.mk
 
-BINARY_NAME := $(call GET_BUILD_NAME)
+ifeq ($(RELEASE),1)
+BINARY_NAME := vulpix-f$(VULPIX_VER)
+BUILD_TYPE := RELEASE
+else
+BINARY_NAME := vulpix-d$(VULPIX_VER)
+BUILD_TYPE := DEVELOPMENT
+PP_DEFINES := DEBUG_LOG_ENABLE
+endif
 
 BUILD_INCLUDES += \
 	$(VPX_HEADERS) \
@@ -39,15 +46,15 @@ build-vulpix-objs: $(subst $(SRC_PATH),$(OBJ_PATH),$(call GET_OBJ_NAMES,$(SRC_PA
 
 $(BUILD_OUT_DIR)/$(BINARY_NAME): build-deps build-vulpix-objs
 	mkdir -p $(BUILD_OUT_DIR);
-	echo "\nLinking binary $@...";	
+	echo "\nLinking binary $@...";
 	$(call CXX_LINKALL,$@,$(call GET_OBJ_FILES,$(OBJ_PATH)))
 
 	if [ $$? -eq 0 ]; then \
-		echo "Build complete."; \
+		echo "$(BUILD_TYPE) build complete."; \
 		echo "Output binary: $@"; \
 	fi;
 
 $(OBJ_PATH)/vulpix/%.o: $(SRC_PATH)/vulpix/%.cpp
 	@mkdir -p $(@D);
 	@echo "$(call TO_UPPER,$(subst .,,$(suffix $<)))       $@";
-	$(call CXX_COMPILE,$<,$@,$(foreach dir,$(BUILD_INCLUDES),-I $(dir)))
+	$(call CXX_COMPILE,$<,$@,$(foreach dir,$(BUILD_INCLUDES),-I$(dir)))

@@ -10,6 +10,7 @@
 #define CHILD_PROP_MASK_ALL_REQUIRED     0xF
 #define IS_BIT_SET(mask, pos)    (mask & (1 << pos))
 
+typedef YAML::Node node_t;
 typedef void* (*funcPtr_t)(void);
 typedef uint8_t childPropBitmask_t;     // TODO: Write UT to confirm this is larger than MAX_CHILD_PROPS_BITS
 typedef uint16_t configPropIndex_t;
