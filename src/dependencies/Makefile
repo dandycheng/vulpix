@@ -11,6 +11,4 @@ build-deps: $(addprefix build-,$(BUILD_TARGETS))
 
 # TODO: Use a separate target to allow cleanup $(MAKE) -C <dep_path> cleanup
 # FIX: Second run throws error
-clean-deps:
-	echo "Cleaning up dependencies..."
-	$(foreach dep,$(DEPENDENCY_MAKEFILES),$(MAKE) -C $(dir $(DEPENDENCY_MAKEFILES)) cleanup)
+clean-deps: $(addprefix clean-,$(DEPENDENCIES))

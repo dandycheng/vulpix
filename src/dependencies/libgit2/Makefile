@@ -10,7 +10,7 @@ CLEAN_TARGETS += libgit2
 CLEAN_DIRS += $(OBJ_PATH)/libgit2
 
 .SILENT:
-cleanup:
+clean-libgit2:
 	$(call RMDIR,$(OBJ_PATH)/libgit2)
 
 download-libgit2:
@@ -19,8 +19,11 @@ download-libgit2:
 	$(call UNTAR,/tmp/libgit2.tar.gz,$(DEPS_PATH)/libgit2)
 
 build-libgit2:
-	$(call MKDIR $(DEPS_PATH)/libgit2/build && cd $(DEPS_PATH)/libgit2/build)
-	cmake --build .
+	$(call MKDIR,$(DEPS_PATH)/libgit2/build)
+	cd $(DEPS_PATH)/libgit2/build && cmake .. && cmake --build .; \
+	if [ $$? -eq 0 ]; then \
+		mv libgit2.so $(SHAREDLIBS_DIR); \
+	fi
 
 # TODO: Refactor
 $(OBJ_PATH)/libgit2/%.o: $(DEPS_PATH)/libgit2/%.cpp

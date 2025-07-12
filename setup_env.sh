@@ -1,5 +1,10 @@
 #!/bin/bash
 
+MKDIRS=(
+    src/build/obj
+    src/build/sharedlibs
+)
+
 set_env_vars ()
 {
     export VPX_ROOT_DIR="$(git rev-parse --show-toplevel | sed 's/ /\\ /g')"
@@ -8,11 +13,9 @@ set_env_vars ()
 
 create_dirs ()
 {
-    mkdir -p \
-        src/build/obj \
-        src/build/out
-    
-    return $?
+    for d in "${MKDIRS[@]}"; do
+        mkdir -p "$d"
+    done
 }
 
 run_setup ()

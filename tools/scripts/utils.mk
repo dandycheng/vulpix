@@ -7,7 +7,9 @@ WGET  = wget $1 --quiet --directory-prefix /tmp -O /tmp/$2;
 CP    = cp -r $1 $2;
 UNTAR = \
 if [ -f "$1" ]; then \
-	$(call MKDIR,$3) \
+	if [ -n "$3" ]; then \
+		mkdir -p $3; \
+	fi; \
 	if [ -n "$2" ]; then \
 		echo "Extracting $2..."; \
 	else \
