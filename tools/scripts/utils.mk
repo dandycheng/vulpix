@@ -17,6 +17,12 @@ if [ -f "$1" ]; then \
 	fi; \
 	tar -xf $1 --directory $3 $2 --strip-components=1; \
 fi;
+MK_STATIC_LIB = \
+	"Creating static library $1..."; \
+	if [ ! -d "$(STATIC_LIBS_DIR)" ]; then \
+		$(call MKDIR,$(STATIC_LIBS_DIR)) \
+	fi; \
+	ar crs $1 $(shell find $2 -name '*.o');
 
 # C/C++ helper functions
 GET_CPP_FILES    = $(shell find $1 -name '*.cpp')
@@ -26,7 +32,7 @@ GET_OBJ_NAMES    = $(shell find $1 -name '*.cpp' | sed "s/\.cpp/\.o/g")
 GET_MAKEFILES    = $(shell find $1 -name 'Makefile' -or -name 'makefile')
 
 CXX_LINKALL = $(CXX) $(CXX_FLAGS) -o $1 $2 $3
-CXX_COMPILE = $(CXX) $(CXX_FLAGS) -c $1 -o $2 $3 $(foreach d,$(PP_DEFINES),-D$(d))
+CXX_COMPILE = $(shell set -e; $(CXX) $(CXX_FLAGS) -c $1 -o $2 $3 $(foreach d,$(PP_DEFINES),-D$(d)))
 
 # String helper functions
 TO_UPPER = $(shell echo $1 | tr a-z A-Z)
