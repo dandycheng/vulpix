@@ -12,17 +12,22 @@ OMIT_OBJ_FILES          := $(SRC_PATH)/build/obj/vulpix/main.o
 .SILENT:
 build-deps:
 	echo "Building test dependencies...";
-	$(if $(DEPENDENCIES),$(foreach dep,build-$(DEPENDENCIES),$(MAKE) -C $(VPX_ROOT_DIR) $(dep) DEBUG=1;),)
-	$(MAKE) -C $(VPX_ROOT_DIR)/ build-vulpix-objs DEBUG=1;
+	$(if $(DEPENDENCIES),$(foreach dep,$(DEPENDENCIES),$(MAKE) -C $(DEPS_PATH)/$(dep) debug=1 build-$(dep);),)
+	$(MAKE) -C $(SRC_PATH) build-vulpix-objs DEBUG=1;
 
 setup-env:
 	$(call MKDIR,$(CURDIR)/$(OBJ_PATH))
 
+
+# FIX: Non zero exit code doesn't stop test from running!
 .PHONY:
 test: setup-env build-deps $(TEST_OBJ_FILES)
 	echo "Linking $(TEST_BINARY)..."
 	$(call CXX_LINKALL,out/$(TEST_BINARY),$(call GET_TEST_DEP_OBJ_FILES) $(TEST_OBJ_FILES),$(TEST_LIBS))
-	$(TEST_BINARY_PATH)/$(TEST_BINARY)
+
+	if [ $$? -eq 0 ]; then \
+		$(TEST_BINARY_PATH)/$(TEST_BINARY); \
+	fi
 
 cleanall: clean
 	$(MAKE) -C $(VPX_ROOT_DIR) clean
