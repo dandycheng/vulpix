@@ -72,9 +72,10 @@ bool Config::isConfigPropValid(configPropIndex_t index)
 {
     string key = CONFIG_TABLE[index].key;
 
-    if (((CONFIG_TABLE[index].role == CFG_PROP_ROLE_PARENT) || (CONFIG_TABLE[index].role == CFG_PROP_ROLE_BOTH)) &&
+    if (IS_BIT_SET(CONFIG_TABLE[index].role, CFG_PROP_ROLE_PARENT) &&
         CONFIG_TABLE[index].required && !m_config[key].IsDefined())
     {
+        DEBUG_LOG(LOG_ERROR, "%s parent property is required but not found!", CONFIG_TABLE[index].key.c_str());
         return false;
     }
 

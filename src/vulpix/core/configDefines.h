@@ -63,14 +63,31 @@ typedef struct property
 #define CFG_CHILD_PROPS(...)    { __VA_ARGS__, CFG_PROP_INDEX_UNDO }
 #define CFG_PROP_LINUX_PKG_MANAGER_CHILD_PROPS    CFG_CHILD_PROPS(CFG_PROP_INDEX_INSTALL, CFG_PROP_INDEX_ASSUME_YES, CFG_PROP_INDEX_NO_GPG_CHECK)
 
+// key:
+//      Name of the property
+// required:
+//      Only used for parent properties. This will force the initial config 
+//      validation to fail if the property is not define in the config file.
+// childProps:
+//      Supported child properties.
+// role:
+//      Whether this is a parent, child, or supports both.
+// childPropsRequiredMask:
+//      Defines which child properties must be defined in the config file.
+//      This is based on the indexing in CFG_CHILD_PROPS.
+// getDefaultValue:
+//      The default value of the property is none is defined in the config
+//      file.
+// hasMacro:
+//      Defines whether this property has a macro to run.
 property_t const CONFIG_TABLE[]
 {
-//    key                            required    childProps                                 role                    childPropsRequiredMask           getDefaultValue    hasMacro
+//    key                            required    childProps                                 role                     childPropsRequiredMask           getDefaultValue   hasMacro
     { CFG_PROP_NAME,                 true,       { },                                       CFG_PROP_ROLE_BOTH,      CHILD_PROP_MASK_ALL_REQUIRED,    nullptr,          false   },
-    { CFG_PROP_LINUX_PKG_MANAGER,    false,      CFG_PROP_LINUX_PKG_MANAGER_CHILD_PROPS,    CFG_PROP_ROLE_PARENT,    0b001,                           nullptr,          true   },
+    { CFG_PROP_LINUX_PKG_MANAGER,    false,      CFG_PROP_LINUX_PKG_MANAGER_CHILD_PROPS,    CFG_PROP_ROLE_PARENT,    0b001,                           nullptr,          true    },
     { CFG_PROP_ASSUME_YES,           false,      { },                                       CFG_PROP_ROLE_CHILD,     CHILD_PROP_MASK_ALL_REQUIRED,    nullptr,          false   },
-    { CFG_PROP_INSTALL,              true,       { },                                       CFG_PROP_ROLE_CHILD,     CHILD_PROP_MASK_ALL_REQUIRED,    nullptr,          false   },
-    { CFG_PROP_STOP_ON_ERR,          false,      { },                                       CFG_PROP_ROLE_PARENT,    CHILD_PROP_MASK_ALL_REQUIRED,    nullptr,          false   },
+    { CFG_PROP_INSTALL,              false,      { },                                       CFG_PROP_ROLE_CHILD,     CHILD_PROP_MASK_ALL_REQUIRED,    nullptr,          false   },
+    { CFG_PROP_STOP_ON_ERR,          false,      { },                                       CFG_PROP_ROLE_BOTH,      CHILD_PROP_MASK_ALL_REQUIRED,    nullptr,          false   },
     { CFG_PROP_NO_GPG_CHECK,         false,      { },                                       CFG_PROP_ROLE_CHILD,     CHILD_PROP_MASK_ALL_REQUIRED,    nullptr,          false   },
     { CFG_PROP_UNDO,                 false,      { },                                       CFG_PROP_ROLE_CHILD,     CHILD_PROP_MASK_ALL_REQUIRED,    nullptr,          false   }
 };
