@@ -32,7 +32,12 @@ GET_OBJ_NAMES    = $(shell find $1 -name '*.cpp' | sed "s/\.cpp/\.o/g")
 GET_MAKEFILES    = $(shell find $1 -name 'Makefile' -or -name 'makefile')
 
 CXX_LINKALL = $(CXX) $(CXX_FLAGS) -o $1 $2 $3
-CXX_COMPILE = $(shell set -e; $(CXX) $(CXX_FLAGS) -c $1 -o $2 $3 $(foreach d,$(PP_DEFINES),-D$(d)))
+
+define CXX_COMPILE
+    $(call MKDIR,$(dir $(1)))
+    $(CXX) $(CXX_FLAGS) -c $(1) -o $(2) $(3) $(foreach d,$(PP_DEFINES),-D$(d))
+endef
+
 
 # String helper functions
 TO_UPPER = $(shell echo $1 | tr a-z A-Z)

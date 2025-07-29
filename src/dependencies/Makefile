@@ -1,7 +1,7 @@
 include $(VPX_ROOT_DIR)/tools/scripts/vars.mk
 include $(VPX_ROOT_DIR)/tools/scripts/utils.mk
 
-DEPENDENCY_MAKEFILES = $(call GET_MAKEFILES,$(DEPS_PATH)/*/*)
+DEPENDENCY_MAKEFILES = $(shell find $(DEPS_PATH) -mindepth 2 -maxdepth 2 -iname 'makefile')
 DEPENDENCIES = $(subst /,,$(subst $(DEPS_PATH),,$(shell ls -d $(DEPS_PATH)/*/)))
 
 include $(DEPENDENCY_MAKEFILES)

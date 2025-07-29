@@ -22,13 +22,7 @@ download-libgit2:
 
 build-libgit2:
 	$(call MKDIR,$(LIBGIT2_SRC)/build)
-	cd $(DEPS_PATH)/libgit2/source/build && cmake .. && cmake --build .; \
+	cd $(LIBGIT2_SRC)/build && cmake .. && cmake --build .; \
 	if [ $$? -eq 0 ]; then \
-		mv libgit2.so $(SHAREDLIBS_DIR); \
+		cp $(LIBGIT2_SRC)/build/libgit2.so $(SHAREDLIBS_DIR); \
 	fi
-
-# TODO: Refactor
-$(OBJ_PATH)/libgit2/%.o: $(DEPS_PATH)/libgit2/%.cpp
-	mkdir -p $(@D)
-	@echo "$(call TO_UPPER,$(subst .,,$(suffix $<))) [D]   $@";
-	$(CXX) $(CXX_FLAGS) -c $< -o $@ $(foreach dir,$(LIBGIT2_INCLUDES),-I $(dir))
