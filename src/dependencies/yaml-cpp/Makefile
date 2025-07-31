@@ -20,7 +20,7 @@ LIBS += yamlcpp
 
 .SILENT:
 clean-yaml-cpp:
-	$(call RMDIR,$(OBJ_PATH)/yaml-cpp)
+	$(call RMRF,$(OBJ_PATH)/yaml-cpp)
 
 download-yaml-cpp:
 	@echo "Downloading yaml-cpp v$(YAML_CPP_VER)...";

@@ -34,4 +34,4 @@ remove-build-deps:
 
 .PHONY:
 clean: clean-deps
-	$(foreach dir,$(CLEAN_DIRS),$(call RMDIR,$(dir)))
+	$(foreach dir,$(CLEAN_DIRS),$(call RMRF,$(dir)))

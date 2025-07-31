@@ -1,30 +1,60 @@
 SHELL := /bin/bash
 
-# Generic shell helper functions
+############################################################
+#                  Shell helper functions                  #
+############################################################
+
 MKDIR = mkdir -p $1;
-RMDIR = if [ -d "$1" ]; then rm -rf "$1"; fi;
+RMRF  = if [ -d "$1" ] || [ -f "$1" ]; then rm -rf "$1"; fi;
 WGET  = wget $1 --quiet --directory-prefix /tmp -O /tmp/$2;
 CP    = cp -r $1 $2;
-UNTAR = \
-if [ -f "$1" ]; then \
-	if [ -n "$3" ]; then \
-		mkdir -p $3; \
-	fi; \
-	if [ -n "$2" ]; then \
-		echo "Extracting $2..."; \
-	else \
-		echo "Extracting $1..."; \
-	fi; \
-	tar -xf $1 --directory $3 $2 --strip-components=1; \
-fi;
 
-define ALL_PREQS_MATCH
-	$(if $(filter-out %$(1),$^),
-		$(error Some prerequisites don't match the extension $(1)! $(filter-out %$(1),$^)),
-	)
+
+# Extracts an archive using tar.
+# Usage:
+#
+# $(1) - Path to the archive
+# $(2) - Directory within the archive to extract
+# $(2) - Target directory to extract $(2) to
+define UNTAR
+	if [ -f "$(1)" ]; then \
+		if [ -n "$(3)" ]; then \
+			mkdir -p $(3); \
+		fi; \
+		if [ -n "$(2)" ]; then \
+			echo "Extracting $(2)..."; \
+		else \
+			echo "Extracting $(1)..."; \
+		fi; \
+		tar -xf $(1) --directory $(3) $(2) --strip-components=1; \
+	fi;
 endef
 
 
+define GET_FILE_SIZE
+	du $(1) --block-size=$(if $(2),$(2),K) | awk '{print $$1}';
+endef
+
+##########################################################
+#        C/C++ build pipeline specific functions         #
+##########################################################
+
+# TODO: Compile cross-toolchain:
+# gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu
+
+GET_CPP_FILES    = $(shell find $1 -name '*.cpp')
+GET_HEADER_FILES = $(shell find $1 -name '*.hpp' -or -name '*.h')
+GET_OBJ_FILES    = $(shell find $1 -name '*.o')
+GET_OBJ_NAMES    = $(shell find $1 -name '*.cpp' | sed "s/\.cpp/\.o/g")
+GET_MAKEFILES    = $(shell find $1 -iname 'makefile')
+
+
+# Creates static library. Non-relocated object files
+# will be omitted.
+# To create one, have a target of the form:
+#
+# libyamlcpp.a: $(MY_OBJ_FILES)
+#     $(call MK_STATIC_LIB)
 define MK_STATIC_LIB
 	echo "Creating static library $@...";
 
@@ -32,8 +62,7 @@ define MK_STATIC_LIB
 		$(call MKDIR,$(STATICLIBS_DIR)) \
 	fi;
 
-	ar crs $(STATICLIBS_DIR)/$@ $^;
-	$(call ALL_PREQS_MATCH,.o)
+	ar crs $(STATICLIBS_DIR)/$@ $(filter %.o,$^);
 
 	if [ $$? -eq 0 ]; then \
 		echo "Static library created: $(STATICLIBS_DIR)/$@"; \
@@ -103,21 +132,8 @@ define CXX_LINK
 	fi
 endef
 
+##########################################################
+#                String helper functions                 #
+##########################################################
 
-GET_CPP_FILES    = $(shell find $1 -name '*.cpp')
-GET_HEADER_FILES = $(shell find $1 -name '*.hpp' -or -name '*.h')
-GET_OBJ_FILES    = $(shell find $1 -name '*.o')
-GET_OBJ_NAMES    = $(shell find $1 -name '*.cpp' | sed "s/\.cpp/\.o/g")
-GET_MAKEFILES    = $(shell find $1 -name 'Makefile' -or -name 'makefile')
-
-CXX_LINKALL = $(CXX) $(CXX_FLAGS) -o $1 $2 $3
-
-define GET_FILE_SIZE
-	du $(1) --block-size=$(if $(2),$(2),K) | awk '{print $$1}';
-endef
-
-# String helper functions
 TO_UPPER = $(shell echo $1 | tr a-z A-Z)
-
-# TODO: Compile cross-toolchain:
-# gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu

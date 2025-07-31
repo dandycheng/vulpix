@@ -13,7 +13,7 @@ PP_DEFINES += LIBGIT2_SO=libgit2.so
 
 .SILENT:
 clean-libgit2:
-	$(call RMDIR,$(OBJ_PATH)/libgit2)
+	$(call RMRF,$(OBJ_PATH)/libgit2)
 
 download-libgit2:
 	@echo "Downloading libgit2 v$(LIBGIT2_VER)...";
