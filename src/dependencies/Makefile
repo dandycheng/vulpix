@@ -3,6 +3,7 @@ include $(VPX_ROOT_DIR)/tools/scripts/utils.mk
 
 DEPENDENCY_MAKEFILES = $(shell find $(DEPS_PATH) -mindepth 2 -maxdepth 2 -iname 'makefile')
 DEPENDENCIES = $(subst /,,$(subst $(DEPS_PATH),,$(shell ls -d $(DEPS_PATH)/*/)))
+CXX_BUILD_TYPE := DEPENDENCY
 
 include $(DEPENDENCY_MAKEFILES)
 

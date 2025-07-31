@@ -9,7 +9,7 @@ SRC_PATH       = $(VPX_ROOT_DIR)/src
 DEPS_PATH      = $(SRC_PATH)/dependencies
 OBJ_PATH       = $(SRC_PATH)/build/obj
 SHAREDLIBS_DIR = $(SRC_PATH)/build/sharedlibs
-STATIC_LIBS_DIR = $(SRC_PATH)/build/staticlibs
+STATICLIBS_DIR = $(SRC_PATH)/build/staticlibs
 BUILD_OUT_DIR  = $(VPX_ROOT_DIR)/artifacts
 
 # Build related variables

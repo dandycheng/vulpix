@@ -6,7 +6,7 @@ LIBGIT2_FILE_TYPE := tar.gz
 LIBGIT2_URL := https://github.com/libgit2/libgit2/archive/refs/tags/v$(LIBGIT2_VER).$(LIBGIT2_FILE_TYPE)
 LIBGIT2_SRC := $(DEPS_PATH)/libgit2/source
 
-BUILD_TARGETS += libgit2
+# BUILD_TARGETS += libgit2
 CLEAN_TARGETS += libgit2
 CLEAN_DIRS += $(OBJ_PATH)/libgit2
 

@@ -4,7 +4,7 @@ include $(VPX_ROOT_DIR)/tools/scripts/utils.mk
 YAML_CPP_VER := 0.8.0
 YAML_CPP_FILE_TYPE := tar.gz
 YAML_CPP_URL := https://github.com/jbeder/yaml-cpp/archive/refs/tags/$(YAML_CPP_VER).$(YAML_CPP_FILE_TYPE)
-YAML_CPP_INCLUDES = \
+PP_INCLUDES = \
 	$(DEPS_PATH)/yaml-cpp/source/src \
 	$(DEPS_PATH)/yaml-cpp/source/include \
 	$(DEPS_PATH)/yaml-cpp/source/include/yaml-cpp \
@@ -26,14 +26,11 @@ download-yaml-cpp:
 	$(call UNTAR,/tmp/yaml-cpp.tar.gz,yaml-cpp-$(YAML_CPP_VER)/src/,$(DEPS_PATH)/yaml-cpp/source)
 	$(call UNTAR,/tmp/yaml-cpp.tar.gz,yaml-cpp-$(YAML_CPP_VER)/include,$(DEPS_PATH)/yaml-cpp/source)
 
-build-yaml-cpp: $(STATIC_LIBS_DIR)/libyamlcpp.a
+build-yaml-cpp: libyamlcpp.a
 
 # TODO: Refactor
 $(OBJ_PATH)/yaml-cpp/%.o: $(DEPS_PATH)/yaml-cpp/%.cpp
-	mkdir -p $(@D)
-	@echo "$(call TO_UPPER,$(subst .,,$(suffix $<))) [D]   $@";
-	$(CXX) $(CXX_FLAGS) -c $< -o $@ $(foreach dir,$(YAML_CPP_INCLUDES),-I $(dir))
+	$(call CXX_COMPILE,$(CXX_BUILD_TYPE))
 
-$(STATIC_LIBS_DIR)/libyamlcpp.a: $(subst $(DEPS_PATH),$(OBJ_PATH),$(call GET_OBJ_NAMES,$(DEPS_PATH)/yaml-cpp))
-	$(call MKDIR,$(dir $@))
-	echo $(call MK_STATIC_LIB,$@,$(OBJ_PATH)/yaml-cpp/source)
+libyamlcpp.a: $(subst $(DEPS_PATH),$(OBJ_PATH),$(call GET_OBJ_NAMES,$(DEPS_PATH)/yaml-cpp))
+	$(call MK_STATIC_LIB)

@@ -10,7 +10,7 @@ BUILD_TYPE := DEVELOPMENT
 PP_DEFINES := DEBUG_LOG_ENABLE
 endif
 
-BUILD_INCLUDES += \
+PP_INCLUDES := \
 	$(VPX_HEADERS) \
 	$(DEPS_PATH)/yaml-cpp/source/include \
 	$(DEPS_PATH)/yaml-cpp/source/src
@@ -42,8 +42,6 @@ help:
 	@echo "                    a target to download its source."
 	@echo
 
-build-vulpix-objs: $(subst $(SRC_PATH),$(OBJ_PATH),$(call GET_OBJ_NAMES,$(SRC_PATH)/vulpix))
-
 $(BUILD_OUT_DIR)/$(BINARY_NAME): build-deps build-vulpix-objs
 	mkdir -p $(BUILD_OUT_DIR);
 	echo "\nLinking binary $@...";
@@ -54,7 +52,7 @@ $(BUILD_OUT_DIR)/$(BINARY_NAME): build-deps build-vulpix-objs
 		echo "Output binary: $@"; \
 	fi;
 
+build-vulpix-objs: $(subst $(SRC_PATH),$(OBJ_PATH),$(call GET_OBJ_NAMES,$(SRC_PATH)/vulpix))
+
 $(OBJ_PATH)/vulpix/%.o: $(SRC_PATH)/vulpix/%.cpp
-	@mkdir -p $(@D);
-	@echo "$(call TO_UPPER,$(subst .,,$(suffix $<)))       $@";
-	$(call CXX_COMPILE,$<,$@,$(foreach dir,$(BUILD_INCLUDES),-I$(dir)))
+	$(call CXX_COMPILE)
