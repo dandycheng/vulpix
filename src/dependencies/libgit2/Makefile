@@ -9,6 +9,7 @@ LIBGIT2_SRC := $(DEPS_PATH)/libgit2/source
 # BUILD_TARGETS += libgit2
 CLEAN_TARGETS += libgit2
 CLEAN_DIRS += $(OBJ_PATH)/libgit2
+PP_DEFINES += LIBGIT2_SO=libgit2.so
 
 .SILENT:
 clean-libgit2:

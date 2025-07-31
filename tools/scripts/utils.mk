@@ -1,5 +1,4 @@
 SHELL := /bin/bash
-UTILS_MAKEFILE_INCLUDE_DIRECTIVE := 1
 
 # Generic shell helper functions
 MKDIR = mkdir -p $1;
@@ -20,13 +19,11 @@ if [ -f "$1" ]; then \
 fi;
 
 define ALL_PREQS_MATCH
-	echo $(filter-out %$(1),$^);
-	if [ -n "$(strip $(filter-out %$(1),$^))" ]; then \
-		$(error "Some prerequisites don't match the extension $(1)!\
-			$(filter-out %$(1),$^) \
-		"); \
-	fi;
+	$(if $(filter-out %$(1),$^),
+		$(error Some prerequisites don't match the extension $(1)! $(filter-out %$(1),$^)),
+	)
 endef
+
 
 define MK_STATIC_LIB
 	echo "Creating static library $@...";
@@ -45,7 +42,68 @@ define MK_STATIC_LIB
 	fi;
 endef
 
-# C/C++ helper functions
+
+# Compile C++ source files to object files.
+# To compile, have a target of the form:
+#
+# $(OBJ_PATH)/%.o: %.cpp
+#     $(call CXX_COMPILE, ...)
+#
+# $(1) - Preprocessor includes, g++ -I flag
+# $(2) - Preprocessor defines, g++ -D flag
+# $(3) - Library search path, g++ -L flag
+# $(4) - Libraries, g++ -l flag
+# $(5) - Optional - Defines the type of build
+# You may optionally pass the build type, this only affects the output message:
+#	# $(call CXX_COMPILE,DEPENDENCY)
+define CXX_COMPILE
+    $(call MKDIR,$(@D))
+	$(CXX) $(CXX_FLAGS) -c $< -o $@ \
+			$(foreach dir,$(1),-I$(dir)) \
+			$(foreach d,$(2),-D$(d)) \
+			$(foreach ld,$(3),-L$(ld)) \
+			$(foreach lib,$(4),-l$(lib));
+
+	if [[ "$(5)" == "DEPENDENCY" ]]; then \
+		echo "$(call TO_UPPER,$(subst .,,$(suffix $<))) [D]   $@"; \
+	else \
+		echo "$(call TO_UPPER,$(subst .,,$(suffix $<)))       $@"; \
+	fi;
+endef
+
+
+# Links all C++ relocatable object files and library
+# files into a single binary.
+# To compile, have a target of the form:
+#
+# $(OBJ_PATH)/%.o: %.cpp
+#     $(call LINK, ...)
+#
+# $(1) - The output binary
+# $(2) - Relocatable object files to link
+# $(3) - Library search path, g++ -L flag
+# $(4) - Libraries, g++ -l flag
+define CXX_LINK
+	$(call MKDIR,$(dir $1))
+	$(CXX) $(CXX_FLAGS) -o $(1) $(2) \
+		$(foreach dir,$(3),-L$(dir) ) \
+		$(foreach lib,$(4),-l$(lib) );
+
+	if [ $$? -eq 0 ]; then \
+		echo -e "Linking complete: $(1)\n"; \
+		echo "Output binary: $(1)"; \
+		echo -n "Binary size: "; \
+		$(call GET_FILE_SIZE,$(1)) \
+		echo -e "\nSections:"; \
+		echo "━━━━━━━━━━━"; \
+		size $(1); \
+	else \
+		echo "Linking failed!"; \
+		exit 1; \
+	fi
+endef
+
+
 GET_CPP_FILES    = $(shell find $1 -name '*.cpp')
 GET_HEADER_FILES = $(shell find $1 -name '*.hpp' -or -name '*.h')
 GET_OBJ_FILES    = $(shell find $1 -name '*.o')
@@ -54,44 +112,9 @@ GET_MAKEFILES    = $(shell find $1 -name 'Makefile' -or -name 'makefile')
 
 CXX_LINKALL = $(CXX) $(CXX_FLAGS) -o $1 $2 $3
 
-define CXX_LINK
-	$(CXX) $(CXX_FLAGS) -o $(CXX_LINK_OBJS) \
-		$(foreach dir,$(CXX_LIB_SEARCH_PATH),-L$(dir) ) \
-		$(foreach lib,$(CXX_LIBS),-l$(lib) );
-
-	if [ $$? -eq 0 ]; then \
-		echo "Linking complete: $1"; \
-		echo "Output binary: $1"; \
-		echo "----------------"; \
-		size $1; \
-		echo "----------------"; \
-	else \
-		echo "Linking failed!"; \
-		exit 1; \
-	fi
+define GET_FILE_SIZE
+	du $(1) --block-size=$(if $(2),$(2),K) | awk '{print $$1}';
 endef
-
-# Compile C++ source files to object files.
-# To compile, have a target of the form:
-#
-# $(OBJ_PATH)/%.o: %.cpp
-#     $(call CXX_COMPILE)
-#
-# You may optionally pass the build type, this only affects the output message:
-#	# $(call CXX_COMPILE,DEPENDENCY)
-#
-define CXX_COMPILE
-    $(call MKDIR,$(@D))
-	$(CXX) $(CXX_FLAGS) -c $< -o $@ \
-			$(foreach dir,$(PP_INCLUDES),-I $(dir)) \
-			$(foreach d,$(PP_DEFINES),-D$(d));
-	if [[ "$(1)" == "DEPENDENCY" ]]; then \
-		echo "$(call TO_UPPER,$(subst .,,$(suffix $<))) [D]   $@"; \
-	else \
-		echo "$(call TO_UPPER,$(subst .,,$(suffix $<)))       $@"; \
-	fi;
-endef
-
 
 # String helper functions
 TO_UPPER = $(shell echo $1 | tr a-z A-Z)

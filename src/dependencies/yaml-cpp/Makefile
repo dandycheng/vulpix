@@ -15,6 +15,7 @@ PP_INCLUDES = \
 BUILD_TARGETS += yaml-cpp
 CLEAN_TARGETS += yaml-cpp
 CLEAN_DIRS += $(OBJ_PATH)/yaml-cpp
+LIBS += yamlcpp
 
 .SILENT:
 clean-yaml-cpp:
@@ -30,7 +31,7 @@ build-yaml-cpp: libyamlcpp.a
 
 # TODO: Refactor
 $(OBJ_PATH)/yaml-cpp/%.o: $(DEPS_PATH)/yaml-cpp/%.cpp
-	$(call CXX_COMPILE,$(CXX_BUILD_TYPE))
+	$(call CXX_COMPILE,$(PP_INCLUDES),,,,$(CXX_BUILD_TYPE))
 
 libyamlcpp.a: $(subst $(DEPS_PATH),$(OBJ_PATH),$(call GET_OBJ_NAMES,$(DEPS_PATH)/yaml-cpp))
 	$(call MK_STATIC_LIB)
