@@ -17,6 +17,7 @@ CLEAN_TARGETS += yaml-cpp
 CLEAN_DIRS += $(OBJ_PATH)/yaml-cpp
 LIBS += yamlcpp
 
+
 .SILENT:
 clean-yaml-cpp:
 	$(call RMDIR,$(OBJ_PATH)/yaml-cpp)
@@ -26,6 +27,7 @@ download-yaml-cpp:
 	$(call WGET,$(YAML_CPP_URL),yaml-cpp.tar.gz)
 	$(call UNTAR,/tmp/yaml-cpp.tar.gz,yaml-cpp-$(YAML_CPP_VER)/src/,$(DEPS_PATH)/yaml-cpp/source)
 	$(call UNTAR,/tmp/yaml-cpp.tar.gz,yaml-cpp-$(YAML_CPP_VER)/include,$(DEPS_PATH)/yaml-cpp/source)
+	rm -rf /tmp/yaml-cpp.tar.gz
 
 build-yaml-cpp: libyamlcpp.a
 

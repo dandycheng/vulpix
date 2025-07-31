@@ -11,6 +11,10 @@ CLEAN_DIRS := \
 	$(SRC_PATH)/build \
 	$(OBJ_PATH)/vulpix
 
+setup:
+	source setup_env.sh
+	$(MAKE) download-deps
+
 install-build-deps:
 	sudo $(PKG_MANAGER) update; \
 	for dep in $(BUILD_DEPS); do \
