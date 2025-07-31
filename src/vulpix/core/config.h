@@ -25,7 +25,7 @@ public:
     bool verifyConfigFile(void);
     bool runModuleMacro(configPropIndex_t index);
 
-    node_t operator [] (configPropIndex_t index);
+    node_t operator [] (configPropIndex_t index) const;
 
     static vector<string> strNodeToVec(node_t node);    // TODO: Move this to wrapper
 

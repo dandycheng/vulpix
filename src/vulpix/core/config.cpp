@@ -157,7 +157,7 @@ bool Config::runModuleMacro(configPropIndex_t index)
     return false;
 }
 
-node_t Config::operator [] (configPropIndex_t index)
+node_t Config::operator [] (configPropIndex_t index) const
 {
     return m_config[CONFIG_TABLE[index].key];
 }

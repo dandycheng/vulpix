@@ -2,23 +2,21 @@
 #include "config.h"
 #include <cstring>
 
-LambdaBase::LambdaBase(Config* config) :
+LambdaBase::LambdaBase(Config* config, lambda_t lambdaType) :
     m_config(config),
-    m_macros(new macroPtr_t[MAX_NUM_OF_MACROS]),
-    m_teardownMacros(new macroPtr_t[MAX_NUM_OF_MACROS]),
-    m_numMacros(0)
+    m_numMacros(0),
+    m_lambdaType(lambdaType)
 {
-    memset(m_macros, 0, sizeof(m_macros));
+    std::fill(m_macros.begin(), m_macros.end(), nullptr);
+    std::fill(m_teardownMacros.begin(), m_teardownMacros.end(), nullptr);
 }
 
 LambdaBase::~LambdaBase(void)
 {
     if (!teardown())
     {
-        cout << "Macros teardown unsuccessful!\n";
+        cerr << "Macros teardown unsuccessful!\n";
     }
-
-    delete m_macros;
 }
 
 bool LambdaBase::addMacro(macroPtr_t macro, macroPtr_t teardown)
@@ -37,27 +35,20 @@ bool LambdaBase::addMacro(macroPtr_t macro, macroPtr_t teardown)
 
 bool LambdaBase::runLambda(void)
 {
-    bool success = true;
-
-    for (uint8_t i = 0; i < m_numMacros; i++)
-    {
-        success &= m_macros[i]();
-    }
-
-    return success;
+    return false;
 }
 
 bool LambdaBase::teardown(void)
 {
-    bool success = true;
+    return false;
+}
 
-    for (uint8_t i = 0; i < m_numMacros; i++)
-    {
-        if (m_teardownMacros[i] != nullptr)
-        {
-            success &= m_teardownMacros[i]();
-        }
-    }
+lambda_t LambdaBase::getLambdaType(void) const
+{
+    return m_lambdaType;
+}
 
-    return success;
+uint8_t LambdaBase::getNumMacros(void) const
+{
+    return m_numMacros;
 }

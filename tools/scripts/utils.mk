@@ -13,26 +13,26 @@ CP    = cp -r $1 $2;
 # Extracts an archive using tar.
 # Usage:
 #
-# $(1) - Path to the archive
-# $(2) - Directory within the archive to extract
-# $(2) - Target directory to extract $(2) to
+# $1 - Path to the archive
+# $2 - Directory within the archive to extract
+# $2 - Target directory to extract $2 to
 define UNTAR
-	if [ -f "$(1)" ]; then \
-		if [ -n "$(3)" ]; then \
-			mkdir -p $(3); \
+	if [ -f "$1" ]; then \
+		if [ -n "$3" ]; then \
+			mkdir -p $3; \
 		fi; \
-		if [ -n "$(2)" ]; then \
-			echo "Extracting $(2)..."; \
+		if [ -n "$2" ]; then \
+			echo "Extracting $2..."; \
 		else \
-			echo "Extracting $(1)..."; \
+			echo "Extracting $1..."; \
 		fi; \
-		tar -xf $(1) --directory $(3) $(2) --strip-components=1; \
+		tar -xf $1 --directory $3 $2 --strip-components=1; \
 	fi;
 endef
 
 
 define GET_FILE_SIZE
-	du $(1) --block-size=$(if $(2),$(2),K) | awk '{print $$1}';
+	du $1 --block-size=$(if $2,$2,K) | awk '{print $$1}';
 endef
 
 ##########################################################
@@ -72,28 +72,29 @@ define MK_STATIC_LIB
 endef
 
 
-# Compile C++ source files to object files.
+# Compile C++ source files to relocatable object files.
 # To compile, have a target of the form:
 #
 # $(OBJ_PATH)/%.o: %.cpp
 #     $(call CXX_COMPILE, ...)
 #
-# $(1) - Preprocessor includes, g++ -I flag
-# $(2) - Preprocessor defines, g++ -D flag
-# $(3) - Library search path, g++ -L flag
-# $(4) - Libraries, g++ -l flag
-# $(5) - Optional - Defines the type of build
+# $1 - Preprocessor includes, g++ -I flag
+# $2 - Preprocessor defines, g++ -D flag
+# $3 - Library search path, g++ -L flag
+# $4 - Libraries, g++ -l flag
+# $5 - Optional - Defines the type of build
+#
 # You may optionally pass the build type, this only affects the output message:
-#	# $(call CXX_COMPILE,DEPENDENCY)
+#     $(call CXX_COMPILE,DEPENDENCY)
 define CXX_COMPILE
     $(call MKDIR,$(@D))
 	$(CXX) $(CXX_FLAGS) -c $< -o $@ \
-			$(foreach dir,$(1),-I$(dir)) \
-			$(foreach d,$(2),-D$(d)) \
-			$(foreach ld,$(3),-L$(ld)) \
-			$(foreach lib,$(4),-l$(lib));
+			$(foreach dir,$1,-I$(dir)) \
+			$(foreach d,$2,-D$(d)) \
+			$(foreach ld,$3,-L$(ld)) \
+			$(foreach lib,$4,-l$(lib));
 
-	if [[ "$(5)" == "DEPENDENCY" ]]; then \
+	if [[ "$5" == "DEPENDENCY" ]]; then \
 		echo "$(call TO_UPPER,$(subst .,,$(suffix $<))) [D]   $@"; \
 	else \
 		echo "$(call TO_UPPER,$(subst .,,$(suffix $<)))       $@"; \
@@ -108,24 +109,24 @@ endef
 # $(OBJ_PATH)/%.o: %.cpp
 #     $(call LINK, ...)
 #
-# $(1) - The output binary
-# $(2) - Relocatable object files to link
-# $(3) - Library search path, g++ -L flag
-# $(4) - Libraries, g++ -l flag
+# $1 - The output binary
+# $2 - Relocatable object files to link
+# $3 - Library search path, g++ -L flag
+# $4 - Libraries, g++ -l flag
 define CXX_LINK
 	$(call MKDIR,$(dir $1))
-	$(CXX) $(CXX_FLAGS) -o $(1) $(2) \
-		$(foreach dir,$(3),-L$(dir) ) \
-		$(foreach lib,$(4),-l$(lib) );
+	$(CXX) $(CXX_FLAGS) -o $1 $2 \
+		$(foreach dir,$3,-L$(dir) ) \
+		$(foreach lib,$4,-l$(lib) );
 
 	if [ $$? -eq 0 ]; then \
-		echo -e "Linking complete: $(1)\n"; \
-		echo "Output binary: $(1)"; \
+		echo -e "Linking complete: $1\n"; \
+		echo "Output binary: $1"; \
 		echo -n "Binary size: "; \
-		$(call GET_FILE_SIZE,$(1)) \
+		$(call GET_FILE_SIZE,$1) \
 		echo -e "\nSections:"; \
 		echo "━━━━━━━━━━━"; \
-		size $(1); \
+		size $1; \
 	else \
 		echo "Linking failed!"; \
 		exit 1; \
