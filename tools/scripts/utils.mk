@@ -80,9 +80,7 @@ endef
 #
 # $1 - Preprocessor includes, g++ -I flag
 # $2 - Preprocessor defines, g++ -D flag
-# $3 - Library search path, g++ -L flag
-# $4 - Libraries, g++ -l flag
-# $5 - Optional - Defines the type of build
+# $3 - Optional - Defines the type of build
 #
 # You may optionally pass the build type, this only affects the output message:
 #     $(call CXX_COMPILE,DEPENDENCY)
@@ -90,11 +88,9 @@ define CXX_COMPILE
     $(call MKDIR,$(@D))
 	$(CXX) $(CXX_FLAGS) -c $< -o $@ \
 			$(foreach dir,$1,-I$(dir)) \
-			$(foreach d,$2,-D$(d)) \
-			$(foreach ld,$3,-L$(ld)) \
-			$(foreach lib,$4,-l$(lib));
+			$(foreach d,$2,-D$(d));
 
-	if [[ "$5" == "DEPENDENCY" ]]; then \
+	if [[ "$3" == "DEPENDENCY" ]]; then \
 		echo "$(call TO_UPPER,$(subst .,,$(suffix $<))) [D]   $@"; \
 	else \
 		echo "$(call TO_UPPER,$(subst .,,$(suffix $<)))       $@"; \
