@@ -1,13 +1,15 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#include "yaml-cpp/yaml.h"
-#include "shell.h"
 #include <vector>
 #include <string>
 #include <stdint.h>
 #include <array>
 #include <iostream>
+#include <memory>
+#include "yaml-cpp/yaml.h"
+
+#include "shell.h"
 #include "configDefines.h"
 #include "PackageManagerMacro.h"
 
@@ -34,7 +36,7 @@ protected:
     bool m_stopOnErr;
 
 private:
-    System* m_sys;
+    unique_ptr<System> m_sys;
 };
 
 #endif

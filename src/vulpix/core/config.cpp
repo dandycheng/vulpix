@@ -3,8 +3,6 @@
 #include "file.h"
 #include "Aptitude.h"
 #include "PackageManagerMacro.h"
-#include <cstring>
-#include <iostream>
 
 using namespace std;
 
