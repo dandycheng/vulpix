@@ -15,6 +15,7 @@ VPX_PP_INCLUDES := \
 	$(DEPS_PATH)/yaml-cpp/source/include \
 	$(DEPS_PATH)/yaml-cpp/source/src
 
+PRINT_BIN_INFO := 1
 LDFLAGS := $(STATICLIBS_DIR)
 VPX_CXX_OBJS := $(subst $(SRC_PATH),$(OBJ_PATH),$(call GET_OBJ_NAMES,$(SRC_PATH)/vulpix))
 

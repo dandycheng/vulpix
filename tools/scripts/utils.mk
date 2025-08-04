@@ -62,12 +62,15 @@ define MK_STATIC_LIB
 		$(call MKDIR,$(STATICLIBS_DIR)) \
 	fi;
 
-	ar crs $(STATICLIBS_DIR)/$@ $(filter %.o,$^);
-
-	if [ $$? -eq 0 ]; then \
-		echo "Static library created: $(STATICLIBS_DIR)/$@"; \
+	if [ -f "$(STATICLIBS_DIR)/$@" ]; then \
+		echo "Static library $@ was already created."; \
 	else \
-		echo "Failed to create static library $(STATICLIBS_DIR)/$@!"; \
+		ar crs $(STATICLIBS_DIR)/$@ $(filter %.o,$^); \
+		if [ $$? -eq 0 ]; then \
+			echo "Static library created: $@."; \
+		else \
+			echo "Failed to create static library: $@!"; \
+		fi; \
 	fi;
 endef
 
@@ -85,7 +88,7 @@ endef
 # You may optionally pass the build type, this only affects the output message:
 #     $(call CXX_COMPILE,DEPENDENCY)
 define CXX_COMPILE
-    $(call MKDIR,$(@D))
+	$(call MKDIR,$(@D))
 	$(CXX) $(CXX_FLAGS) -c $< -o $@ \
 			$(foreach dir,$1,-I$(dir)) \
 			$(foreach d,$2,-D$(d));
@@ -116,13 +119,15 @@ define CXX_LINK
 		$(foreach lib,$4,-l$(lib) );
 
 	if [ $$? -eq 0 ]; then \
-		echo -e "Linking complete: $1\n"; \
-		echo "Output binary: $1"; \
-		echo -n "Binary size: "; \
-		$(call GET_FILE_SIZE,$1) \
-		echo -e "\nSections:"; \
-		echo "━━━━━━━━━━━"; \
-		size $1; \
+		if [ -n "$(PRINT_BIN_INFO)" ] && [ $(PRINT_BIN_INFO) -eq 1 ]; then \
+			echo -e "Linking complete: $1\n"; \
+			echo "Output binary: $1"; \
+			echo -n "Binary size: "; \
+			$(call GET_FILE_SIZE,$1) \
+			echo -e "\nSections:"; \
+			echo "━━━━━━━━━━━"; \
+			size $1; \
+		fi; \
 	else \
 		echo "Linking failed!"; \
 		exit 1; \
