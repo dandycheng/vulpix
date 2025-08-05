@@ -1,22 +1,15 @@
 name: kernel build
 stop_on_error: true
-user_modules:
-    - Create dev directory:
-        command: mkdir -p ~/dev
-        stdout_var: mkdir_res
-    - Pull repo:
-        rules:
-            - if: ${mkdir_res} == 'success'
-              then:
-                command: echo "success"
-
+ordering:
+    - package_manager
 package_manager:
     undo: false
     lambdas:
-        foreach:
-            data: str.concat
-            macro: aptitude_install
-            result_var: res
+        map:
+            item: install
+            element: e
+            as_type: int
+            output: ${e}
     assume_yes: true
     sub_components:
         install:

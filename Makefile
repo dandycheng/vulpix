@@ -12,7 +12,6 @@ CLEAN_DIRS := \
 	$(OBJ_PATH)/vulpix
 
 setup:
-	source setup_env.sh
 	$(MAKE) download-deps
 
 install-build-deps:

@@ -6,8 +6,7 @@ MAKEFLAGS := --no-print-directory
 .SILENT:
 help:
 	@echo
-	@echo "Targets"
-	@echo "------------------------------------------------------------"
+	@echo "TARGETS:"
 	@echo "ut-all      - Builds all unit tests."
 	@echo "ut-clean    - Cleans all unit tests."
 	@echo "ut-cleanall - Cleans all unit tests and its dependencies."

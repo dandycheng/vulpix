@@ -8,7 +8,7 @@ LambdaBase::LambdaBase(Config* config, lambda_t lambdaType) :
     m_lambdaType(lambdaType)
 {
     std::fill(m_macros.begin(), m_macros.end(), nullptr);
-    std::fill(m_teardownMacros.begin(), m_teardownMacros.end(), nullptr);
+    std::fill(m_undoMacros.begin(), m_undoMacros.end(), nullptr);
 }
 
 LambdaBase::~LambdaBase(void)
@@ -19,12 +19,12 @@ LambdaBase::~LambdaBase(void)
     }
 }
 
-bool LambdaBase::addMacro(macroPtr_t macro, macroPtr_t teardown)
+bool LambdaBase::addMacro(macroPtr_t macro, macroPtr_t undoMacro)
 {
     if ((macro != nullptr) && (m_numMacros < MAX_NUM_OF_MACROS - 1))
     {
         m_macros[m_numMacros] = macro;
-        m_teardownMacros[m_numMacros] = teardown;
+        m_undoMacros[m_numMacros] = undoMacro;
         m_numMacros++;
 
         return true;
@@ -33,14 +33,14 @@ bool LambdaBase::addMacro(macroPtr_t macro, macroPtr_t teardown)
     return false;
 }
 
-bool LambdaBase::runLambda(void)
+bool LambdaBase::runLambda(macroData_t data, bool isUndo)
 {
     return false;
 }
 
 bool LambdaBase::teardown(void)
 {
-    return false;
+    return true;
 }
 
 lambda_t LambdaBase::getLambdaType(void) const

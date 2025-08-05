@@ -1,5 +1,5 @@
-#ifndef DEBUG_H
-#define DEBUG_H
+#ifndef VPX_CORE_DEBUG_H
+#define VPX_CORE_DEBUG_H
 
 #include <string>
 

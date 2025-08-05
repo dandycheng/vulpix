@@ -20,13 +20,12 @@ class LambdaBase
 public:
     LambdaBase(Config* config, lambda_t lambdaType);
     ~LambdaBase(void);
-    bool addMacro(macroPtr_t macro, macroPtr_t teardown);
+    bool addMacro(macroPtr_t macro,  macroPtr_t undoMacro);
     lambda_t getLambdaType(void) const;
     uint8_t getNumMacros(void) const;
 
-    virtual bool runLambda(void)  = 0;
-    virtual bool undoLambda(void) = 0;
-    virtual bool teardown(void)   = 0;
+    virtual bool runLambda(macroData_t data, bool isUndo = false)  = 0;
+    virtual bool teardown(void) = 0;
 
 private:
     lambda_t m_lambdaType;
@@ -35,7 +34,7 @@ private:
 
 protected:
     std::array<macroPtr_t, MAX_NUM_OF_MACROS> m_macros;
-    std::array<macroPtr_t, MAX_NUM_OF_MACROS> m_teardownMacros;
+    std::array<macroPtr_t, MAX_NUM_OF_MACROS> m_undoMacros;
 };
 
 #endif

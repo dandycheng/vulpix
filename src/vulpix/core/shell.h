@@ -1,5 +1,5 @@
-#ifndef SHELL_H
-#define SHELL_H
+#ifndef VPX_CORE_SHELL_H
+#define VPX_CORE_SHELL_H
 
 #include <stdint.h>
 #include <string>

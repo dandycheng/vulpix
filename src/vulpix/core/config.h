@@ -1,5 +1,5 @@
-#ifndef CONFIG_H
-#define CONFIG_H
+#ifndef VPX_CORE_CONFIG_H
+#define VPX_CORE_CONFIG_H
 
 #include <vector>
 #include <string>
@@ -26,6 +26,7 @@ public:
     bool isConfigPropValid(configPropIndex_t index);
     bool verifyConfigFile(void);
     bool runModuleMacro(configPropIndex_t index);
+    bool checkForLambdas(void) const;
 
     node_t operator [] (configPropIndex_t index) const;
 

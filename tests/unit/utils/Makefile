@@ -1,0 +1,12 @@
+include $(VPX_TESTS)/unit/ut_common.mk
+
+TEST_BINARY := sanitizerTest
+
+INCLUDE_PATHS := \
+	$(VPX_HEADERS) \
+	$(VPX_TESTS)/test-framework/mocks \
+	$(VPX_TESTS)/test-framework/mocks/stdlib
+	
+OBJ_FILE_PATHS := \
+	$(OBJ_PATH)/yaml-cpp/source \
+	$(OBJ_PATH)/vulpix

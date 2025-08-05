@@ -1,5 +1,5 @@
-#ifndef SANITIZER_H
-#define SANITIZER_H
+#ifndef VPX_CORE_UTILS_SANITIZER_H
+#define VPX_CORE_UTILS_SANITIZER_H
 
 #include <string>
 #include <vector>

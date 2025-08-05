@@ -1,5 +1,5 @@
-#ifndef DISTRO_H
-#define DISTRO_H
+#ifndef VPX_CORE_DISTRO_H
+#define VPX_CORE_DISTRO_H
 
 #define OS_RELEASE_PATH "/etc/os-release"
 

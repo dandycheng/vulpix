@@ -155,6 +155,19 @@ bool Config::runModuleMacro(configPropIndex_t index)
     return false;
 }
 
+bool Config::checkForLambdas(void) const
+{
+    // for (const auto& prop : m_config)
+    // {
+    //     if (prop.first == CFG_PROP_LAMBDAS)
+    //     {
+    //         return true;
+    //     }
+    // }
+
+    return false;
+}
+
 node_t Config::operator [] (configPropIndex_t index) const
 {
     return m_config[CONFIG_TABLE[index].key];
