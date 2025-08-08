@@ -10,8 +10,11 @@ using namespace std;
 namespace config_parser
 {
 
-#define REGEX_LAMBDA_VAR_PREFIX     regex("\\$\\{", std::regex_constants::ECMAScript)
-#define REGEX_LAMBDA_VAR_SUFFIX     regex("\\}", std::regex_constants::ECMAScript)
+#define LAMBDA_VAR_PREFIX_SZ        2               // Without escape characters, hardcoded to speed up evaluation.
+#define LAMBDA_VAR_PREFIX           string("\\$\\{")
+#define LAMBDA_VAR_SUFFIX           string("\\}")
+#define REGEX_LAMBDA_VAR_PREFIX     regex(LAMBDA_VAR_PREFIX, std::regex_constants::ECMAScript)
+#define REGEX_LAMBDA_VAR_SUFFIX     regex(LAMBDA_VAR_SUFFIX, std::regex_constants::ECMAScript)
 
 typedef uint8_t lambdaStr_t;
 

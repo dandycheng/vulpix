@@ -23,12 +23,44 @@ bool isLambdaStrValid(string str)
 
 void findInnerVarBlock(string str, int& startIndex, int& endIndex, parseResult_t& parseResult)
 {
-    for (string::const_iterator it = str.cbegin(); it != str.cend(); it++)
+    startIndex = -1;
+    endIndex = -1;
+    parseResult = PARSE_SUCCESS;
+
+    if (str.size() == 0)
     {
-        if ((*it == '$') && (*(it + 1) == '{'))
+        return;
+    }
+
+    string::const_iterator it = str.cbegin();
+    uint8_t i = 0;
+    uint8_t j = 0;
+
+    for (uint8_t i = 0; i < str.size(); i++, j = str.size() - 1 - i)
+    {
+        // TODO: Check for escapes
+        if ((str.at(i) == '$') && (str.at(i + 1) == '{'))
         {
-            
+            startIndex = i;
         }
+
+        // Start searching the suffix from the end of the string.
+        // TODO: Check for escapes
+        // TODO: Inner var block?
+        if (str.at(j) == '}' &&
+            (((j - 1) > 0) && (str.at(j - 1) != '\\')))
+        {
+            endIndex = j;
+        }
+    }
+
+    if ((startIndex >= 0) && (endIndex < 0))
+    {
+        parseResult = ERR_CLOSING_BRACKET_EXPECTED;
+    }
+    else if ((endIndex - startIndex) == LAMBDA_VAR_PREFIX_SZ)
+    {
+        parseResult = ERR_EMPTY_VAR;
     }
 }
 
