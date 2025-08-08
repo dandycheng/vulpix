@@ -8,7 +8,7 @@ bool regexIsValidPackageFormat(string text)
 void sanitizeStrings(vector<string>* strings, regex re, vector<string>* malformedStrings)
 {
     smatch match;
-    vector<string>::iterator i = (*strings).begin();
+    vector<string>::iterator i { (*strings).begin() };
 
     for (; i < (*strings).end(); i++)
     {

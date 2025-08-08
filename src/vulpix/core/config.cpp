@@ -68,7 +68,7 @@ bool Config::setupConfig(void)
 
 bool Config::isConfigPropValid(configPropIndex_t index)
 {
-    string key = CONFIG_TABLE[index].key;
+    string key { CONFIG_TABLE[index].key };
 
     if (IS_BIT_SET(CONFIG_TABLE[index].role, CFG_PROP_ROLE_PARENT) &&
         CONFIG_TABLE[index].required && !m_config[key].IsDefined())
@@ -77,8 +77,8 @@ bool Config::isConfigPropValid(configPropIndex_t index)
         return false;
     }
 
-    vector<configPropIndex_t> childProps = CONFIG_TABLE[index].childProps;
-    childPropBitmask_t childPropMask = CONFIG_TABLE[index].childPropsRequiredMask;
+    vector<configPropIndex_t> childProps { CONFIG_TABLE[index].childProps };
+    childPropBitmask_t childPropMask     { CONFIG_TABLE[index].childPropsRequiredMask };
     configPropIndex_t j = 0;
 
     /* For each mask child prop, use the childRequiredPropMask to check whether if
@@ -134,8 +134,8 @@ vector<string> Config::strNodeToVec(node_t node)
 bool Config::runModuleMacro(configPropIndex_t index)
 {
     bool isUndo = false;
-    string propKey = CONFIG_TABLE[index].key;
-    string undoPropKey = CONFIG_TABLE[CFG_PROP_INDEX_UNDO].key;
+    string propKey     { CONFIG_TABLE[index].key };
+    string undoPropKey { CONFIG_TABLE[CFG_PROP_INDEX_UNDO].key };
 
     if (!m_config[propKey][undoPropKey].IsNull() && 
         m_config[propKey][undoPropKey].as<bool>())
@@ -155,6 +155,7 @@ bool Config::runModuleMacro(configPropIndex_t index)
     return false;
 }
 
+// TODO: Brace initialization or equals? Decide!
 bool Config::checkForLambdas(void) const
 {
     // for (const auto& prop : m_config)

@@ -1,5 +1,7 @@
 #include "parser.h"
 
+namespace config_parser
+{
 bool isLambdaStrValid(string str)
 {
     bool valid { true };
@@ -19,8 +21,23 @@ bool isLambdaStrValid(string str)
     return valid;
 }
 
+void findInnerVarBlock(string str, int& startIndex, int& endIndex, parseResult_t& parseResult)
+{
+    for (string::const_iterator it = str.cbegin(); it != str.cend(); it++)
+    {
+        if ((*it == '$') && (*(it + 1) == '{'))
+        {
+            
+        }
+    }
+}
+
 template<typename T>
 void evalLambdaStr(string str, T item)
 {
+    // Parse from the most inner block first, so the upper
+    // block can be evaluated accordingly.
 
+
+}
 }
