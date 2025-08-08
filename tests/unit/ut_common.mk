@@ -41,4 +41,4 @@ clean:
 	rm -rf out
 
 $(TEST_OBJ_PATH)/%.o: %.cpp
-	 $(call CXX_COMPILE,$(foreach dir,$(INCLUDE_PATHS),-I $(dir)))
+	$(call CXX_COMPILE,$(INCLUDE_PATHS),,$(CXX_FLAGS))

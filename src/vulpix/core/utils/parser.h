@@ -7,7 +7,7 @@
 
 using namespace std;
 
-#define REGEX_LAMBDA_VAR_PREFIX     regex("\${", std::regex_constants::ECMAScript)
+#define REGEX_LAMBDA_VAR_PREFIX     regex("${", std::regex_constants::ECMAScript)
 #define REGEX_LAMBDA_VAR_SUFFIX     regex("}", std::regex_constants::ECMAScript)
 
 typedef uint8_t lambdaStr_t;

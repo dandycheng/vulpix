@@ -1,6 +1,6 @@
 include $(VPX_TESTS)/unit/ut_common.mk
 
-TEST_BINARY := sanitizerTest
+TEST_BINARY := parserTest
 
 INCLUDE_PATHS := \
 	$(VPX_HEADERS) \

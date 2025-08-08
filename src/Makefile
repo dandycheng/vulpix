@@ -8,6 +8,7 @@ else
 BINARY_NAME := vulpix-d$(VULPIX_VER)
 BUILD_TYPE := DEVELOPMENT
 VPX_PP_DEFINES := DEBUG_LOG_ENABLE
+CXX_FLAGS += -g
 endif
 
 VPX_PP_INCLUDES := \
@@ -52,4 +53,4 @@ $(BUILD_OUT_DIR)/$(BINARY_NAME): build-deps build-vulpix-objs
 	$(call CXX_LINK,$@,$(VPX_CXX_OBJS),$(LDFLAGS),$(LIBS))
 
 $(OBJ_PATH)/vulpix/%.o: $(SRC_PATH)/vulpix/%.cpp
-	$(call CXX_COMPILE,$(VPX_PP_INCLUDES),$(VPX_PP_DEFINES))
+	$(call CXX_COMPILE,$(VPX_PP_INCLUDES),$(VPX_PP_DEFINES),$(CXX_FLAGS))
